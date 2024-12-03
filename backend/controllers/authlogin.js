@@ -30,12 +30,12 @@ export const userlogin = async (req,res)=>{
                 const token = jwt.sign(payload,process.env.SECRET_KEY,{expiresIn:"10h"});
             
             res.cookie("authToken",token,{
-              
+                httpOnly:true,
                 maxAge: 3600000*5, 
             })
          return   res.status(200).json({ message: "Login successful" });
 
-
+            
         }
         catch(e){
             console.log("error:" , e);
