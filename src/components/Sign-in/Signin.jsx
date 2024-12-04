@@ -3,7 +3,7 @@ import Toggle from "./Toggle";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPath } from "../../store/pathSlice";
-
+import "./Signin.css";
 const Signin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -82,34 +82,36 @@ const Signin = () => {
   }, [currentPath]);
 
   return (
-    <div className={`container ${currentPath === "/register" ? "active" : ""}`} id="container">
-      <div className={`form-container sign-up ${currentPath === "/register" ? "active" : ""}`}>
-        <form onSubmit={onSubmit}>
-          <h1>Create Account</h1>
-          {backendError && <h3 className="error-message" style={{ color: "red" }}>{backendError}</h3>}
-          <input type="text" placeholder="Username" name="username" value={formData.username || ""} onChange={handleChange} />
-          {errors.username && <span>{errors.username}</span>}
-          <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
-          {errors.email && <span>{errors.email}</span>}
-          <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
-          {errors.password && <span>{errors.password}</span>}
-          <button type="submit">Register</button>
-        </form>
-      </div>
+    <div className="signin-page">
+      <div className={`container ${currentPath === "/register" ? "active" : ""}`}>
+        <div className={`form-container sign-up ${currentPath === "/register" ? "active" : ""}`}>
+          <form onSubmit={onSubmit}>
+            <h1>Create Account</h1>
+            {backendError && <h3 className="error-message" style={{ color: "red" }}>{backendError}</h3>}
+            <input type="text" placeholder="Username" name="username" value={formData.username || ""} onChange={handleChange} />
+            {errors.username && <span>{errors.username}</span>}
+            <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
+            {errors.email && <span>{errors.email}</span>}
+            <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
+            {errors.password && <span>{errors.password}</span>}
+            <button type="submit">Register</button>
+          </form>
+        </div>
 
-      <div className={`form-container sign-in ${currentPath === "/login" ? "active" : ""}`}>
-        <form onSubmit={onSubmit}>
-          <h1>Sign In</h1>
-          <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
-          {errors.email && <span>{errors.email}</span>}
-          <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
-          {errors.password && <span>{errors.password}</span>}
-          <a href="#">Forgot Your Password?</a>
-          <button type="submit">Login</button>
-        </form>
-      </div>
+        <div className={`form-container sign-in ${currentPath === "/login" ? "active" : ""}`}>
+          <form onSubmit={onSubmit}>
+            <h1>Sign In</h1>
+            <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
+            {errors.email && <span>{errors.email}</span>}
+            <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
+            {errors.password && <span>{errors.password}</span>}
+            <a href="#">Forgot Your Password?</a>
+            <button type="submit">Login</button>
+          </form>
+        </div>
 
-      <Toggle toggleForm={toggleForm} />
+        <Toggle toggleForm={toggleForm} />
+      </div>
     </div>
   );
 };

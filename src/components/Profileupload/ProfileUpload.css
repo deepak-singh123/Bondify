@@ -1,0 +1,120 @@
+
+.profile-upload-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+}
+.profile-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width:25vw;
+    height:70vh;
+    background-color: #002222;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;    border-radius: 35px;
+  
+}
+.profile-image{
+    position: relative;
+    height: 50%;
+    width: 48%;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: white;
+    top: 10%;
+}
+.profile-upload{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+    
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.user-bio{
+    font-size: larger;
+    font-display: bold;
+    color: white;
+    background-color: #004242;
+    position: relative;
+    margin-top: -40%;
+   height: 30%;
+   width: 90%;
+   border-radius: 15px;
+   padding: 10px; /* Add padding to control text position inside the box */
+    line-height: 1.5; /* Ensure text has proper spacing */
+    box-sizing: border-box; /* Include padding in height/width calculation */
+    display: block;
+}
+.user-bio::placeholder {
+    color: WHITE; /* Change placeholder text color */
+    font-style: italic; /* Make placeholder text italic */
+    font-size: 14px; /* Adjust font size */
+    opacity: 1; /* Set opacity */
+    
+}
+.profile-image img {
+    width: 100%; /* Make the image fill the container */
+    height: 100%; /* Maintain container height */
+    object-fit: cover; /* Ensures the image fits while keeping aspect ratio */
+    border-radius: 50%; /* Ensures the image is also circular */
+}
+ 
+
+#profilePhoto{
+    margin: 10% 10% 40% 10%;
+    position: relative;
+    color:white ;
+    background-color: black;
+    width: 70%;
+    height: 15%;
+    border-radius: 20px;
+    font-size: 100%;
+}
+#profilePhoto::-webkit-file-upload-button {
+    color: white;
+    height: 100%;
+    width: 50%;
+    border-radius: 20px;
+    background-color: #00ADB5;
+    font-size: 100%;
+    font-weight: bold;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    overflow: visible;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+}
+
+#profilePhoto::-webkit-file-upload-button:active {
+    transform:translate3d(0px, -4px, 0px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+    transform: translateY(2px); 
+    background-color: #00ADB5;
+}
+
+.upload-button{
+    position: relative;
+    color:white ;
+    background-color: #00ADB5;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+
+    width: 70%;
+    height: 15%;
+    border-radius: 20px;
+    font-size: 100%;
+}
+.upload-button:active{
+    transform:translate3d(0px, -2px, 0px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+    transform: translateY(2px); 
+    background-color: #00ADB5;
+}

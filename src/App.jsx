@@ -1,9 +1,7 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+ 
 import './App.css'
 import Home from './components/Home'
-import Signin from './components/Sign-in/Signin'
+import ProfileUpload from './components/Profileupload/ProfileUpload'
 
 
 function App() {
@@ -11,8 +9,8 @@ function App() {
   return (
     <>
  
-  <Home/>
-       
+  
+      <ProfileUpload/>
     </>
   )
 }
