@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
 app.use('/auth',router);
@@ -20,7 +22,7 @@ mongoose.connect( MONGO_URL,{
 )
 
 
-app.get('/',(req,res)=>{
+app.get('/home',(req,res)=>{
     res.send("Home page");
 })
 
