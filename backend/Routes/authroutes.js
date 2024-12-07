@@ -6,6 +6,10 @@ import { authlogout } from "../controllers/authlogout.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
 import cors from "cors"
+import uploadprofile from "../controllers/uploadprofile.js";
+import multer from "multer";
+import upload from "../middlware/multer.js";
+import isLoggedin from "../controllers/isLoggedin.js";
 
 const app = express();
 app.use(cookieParser());
@@ -14,10 +18,12 @@ app.use(express.urlencoded({ extended: true }));
 
 dotenv.config()
 
-app.use(cors({ origin: "localhost:3000", credentials: true })); 
+app.use(cors()); 
 
 const router =  express.Router();
 router.post("/register",registeruser);
 router.post("/login",userlogin);
 router.post("/logout",isauthenticated,authlogout);
+router.post("/isloggedin",isauthenticated,isLoggedin);
+router.post("/api/user/profile",upload.single('profilePhoto'),isauthenticated,uploadprofile);
 export default router;

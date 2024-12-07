@@ -10,13 +10,13 @@ const Toggle =({toggleForm})=>{
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all site features</p>
-            <Link to={"/login"}>  <button className="hidden" onClick={toggleForm}>Sign In</button></Link>
+            <p>Have an account already?</p>
+            <Link to={"/login"}>  <button className="hidden" onClick={toggleForm}>Login</button></Link>
           </div>
           <div className="toggle-panel toggle-right">
             <h1>NEW HERE!</h1>
-            <p>Register with your personal details to use all site features</p>
-            <Link to={"/register"}><button className="hidden" onClick={toggleForm}>Sign Up</button></Link>
+            <p>Dont have an account?</p>
+            <Link to={"/register"}><button className="hidden" onClick={toggleForm}>Register</button></Link>
           </div>
         </div>
       </div>

@@ -1,16 +1,23 @@
 import express from 'express';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
-import { dirname, extname } from 'path';
+import { dirname, join, extname } from 'path';
+import fs from 'fs';
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Create uploads directory if it doesn't exist
+const uploadDir = join(__dirname, '../../public/uploads/profiles');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // Configure multer for file upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, new URL('../../../public/uploads/profiles', import.meta.url).pathname)
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
         cb(null, 'profile-' + Date.now() + extname(file.originalname))
@@ -30,23 +37,8 @@ const upload = multer({
         if (mimetype && extname) {
             return cb(null, true);
         }
-        cb(new Error('Only image files (jpg, jpeg, png, webp) are allowed!'));
+        cb(new Error('Only image files are allowed!'));
     }
 });
 
-// Profile photo upload endpoint
-router.post('/upload-profile-photo', upload.single('profilePhoto'), (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
-        res.json({
-            message: 'File uploaded successfully',
-            filename: req.file.filename
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error uploading file', error: error.message });
-    }
-});
-
-export default router;
+export default upload;

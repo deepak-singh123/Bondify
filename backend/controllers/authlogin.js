@@ -38,10 +38,16 @@ export const userlogin = async (req, res) => {
             maxAge: 3600000 * 5, // 5 hours
            
         });
+      
 
-        res.status(200).json({messege:"logged in successfully",redirectTo:"/"})
+      res.status(200).json({
+  message: "Logged in successfully",
+  redirectTo: founduser.profilePicture !== "" ? "/home" : "/profileupload"
+});
+        
+}
 
-    } catch (e) {
+    catch (e) {
         console.log("Error:", e);
         res.status(500).json({ message: "An error occurred on the server." });
     }

@@ -1,18 +1,17 @@
- 
+import { useEffect } from 'react'
 import './App.css'
-import Home from './components/Home'
-import ProfileUpload from './components/Profileupload/ProfileUpload'
-
+import { fetchUserData } from './store/userSlice'
+import { useDispatch } from 'react-redux'
+import { Outlet } from 'react-router-dom'
 
 function App() {
-
-  return (
-    <>
- 
+  const dispatch = useDispatch();
   
-      <ProfileUpload/>
-    </>
-  )
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch])
+
+  return <Outlet />
 }
 
 export default App

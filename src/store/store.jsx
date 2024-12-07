@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import pathReducer from './pathSlice';
+import userReducer from './userSlice';  // Add this import
 
 const store = configureStore({
   reducer: {
-    path: pathReducer
+    path: pathReducer,
+    user: userReducer
   }
 });
 
