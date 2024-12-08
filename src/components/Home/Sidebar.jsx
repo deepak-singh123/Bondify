@@ -2,14 +2,19 @@ import { RiAccountCircleFill, RiHome5Fill, RiGroupFill } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
 import { IoSettingsSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../store/userSlice";
+import { use } from "react";
 
-const Sidebar = () => {
+const Sidebar = ({currclass, sidebarRef}) => {
     const navigate = useNavigate();
     const [activeItem, setActiveItem] = useState('home');
     const dispatch = useDispatch();
+   
+
+   
+
     const handleLogout = async() => {
         try {
             const response = await fetch('/auth/logout', {
@@ -34,7 +39,7 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="sidebar">
+        <div ref={sidebarRef}  className={`sidebar ${currclass}`}>
             <div className="sidebar-options">
                 {menuItems.map((item) => (
                     <div

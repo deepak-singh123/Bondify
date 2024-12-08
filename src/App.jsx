@@ -1,17 +1,26 @@
-import { useEffect } from 'react'
-import './App.css'
-import { fetchUserData } from './store/userSlice'
-import { useDispatch } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import './App.css';
+import { fetchUserData } from './store/userSlice';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   const dispatch = useDispatch();
-  
+  const isDarkMode = useSelector((store) => store.theme.isDarkMode);
+
   useEffect(() => {
     dispatch(fetchUserData());
-  }, [dispatch])
+  }, [dispatch]);
 
-  return <Outlet />
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
+
+  return <Outlet />;
 }
 
-export default App
+export default App;

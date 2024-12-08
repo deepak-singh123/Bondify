@@ -5,6 +5,7 @@ import router from "./Routes/authroutes.js";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 import cors from "cors";
+import authroutes from "./Routes/authroutes.js";
 const app = express();
 app.use(cors({
     origin: "http://localhost:5173", 
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/public', express.static('public'));
-app.use('/auth',router);
+app.use('/auth',authroutes);
 dotenv.config();
 const MONGO_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT;
@@ -33,9 +34,7 @@ mongoose.connect( MONGO_URL,{
 )
 
 
-app.get('/home',(req,res)=>{
-    res.send("Home page");
-})
+
 
 
 app.listen(PORT,()=>{

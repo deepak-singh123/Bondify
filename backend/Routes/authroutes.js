@@ -20,10 +20,10 @@ dotenv.config()
 
 app.use(cors()); 
 
-const router =  express.Router();
-router.post("/register",registeruser);
-router.post("/login",userlogin);
-router.post("/logout",isauthenticated,authlogout);
-router.post("/isloggedin",isauthenticated,isLoggedin);
-router.post("/api/user/profile",upload.single('profilePhoto'),isauthenticated,uploadprofile);
-export default router;
+const authroutes =  express.Router();
+authroutes.post("/register",registeruser);
+authroutes.post("/login",userlogin);
+authroutes.post("/logout",isauthenticated,authlogout);
+authroutes.post("/isloggedin",isauthenticated,isLoggedin);
+authroutes.post("/api/user/profile",upload.single('profilePhoto'),isauthenticated,uploadprofile);
+export default authroutes;

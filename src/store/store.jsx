@@ -1,12 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit';
-import pathReducer from './pathSlice';
-import userReducer from './userSlice';  // Add this import
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./userSlice";
+import pathReducer from "./pathSlice";
+import themeReducer from "./themeSlice";
 
-const store = configureStore({
-  reducer: {
-    path: pathReducer,
-    user: userReducer
-  }
+export const store = configureStore({
+    reducer: {
+        user: userReducer,
+        path: pathReducer,
+        theme: themeReducer
+    }
 });
-
-export default store;
