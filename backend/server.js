@@ -5,7 +5,10 @@ import router from "./Routes/authroutes.js";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 import cors from "cors";
+
 import authroutes from "./Routes/authroutes.js";
+import userroutes from "./Routes/userroutes.js";
+import postroutes from "./Routes/postroutes.js";
 const app = express();
 app.use(cors({
     origin: "http://localhost:5173", 
@@ -16,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/public', express.static('public'));
 app.use('/auth',authroutes);
+app.use('/user',userroutes);
+app.use('/user/post',postroutes);
 dotenv.config();
 const MONGO_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT;

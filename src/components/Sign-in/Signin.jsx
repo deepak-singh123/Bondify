@@ -3,7 +3,9 @@ import Toggle from "./Toggle";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPath } from "../../store/pathSlice";
+import { setUser } from "../../store/userSlice";
 import "./Signin.css";
+
 const Signin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,23 +47,32 @@ const Signin = () => {
       const response = await fetch(`/auth/${route}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',  // Important for setting cookies
         body: JSON.stringify(formData),
       });
 
+      const result = await response.json();
+
       if (response.ok) {
-        const result = await response.json();
-        setBackendError(result.message);
+        // Clear any previous backend errors
+        setBackendError("");
 
         if (route === "login") {
+          // Navigate based on backend response
           navigate(result.redirectTo);
           dispatch(setPath(result.redirectTo));
+        } else if (route === "register") {
+          // For registration, navigate to login
+          navigate("/login");
+          dispatch(setPath("/login"));
         }
       } else {
-        const error = await response.json();
-        setBackendError(error.message);
+        // Handle backend errors
+        setBackendError(result.message || "An error occurred");
       }
     } catch (error) {
       console.error(`Error on ${route}:`, error);
+      setBackendError("Network error. Please try again.");
     }
   };
 
@@ -79,6 +90,7 @@ const Signin = () => {
       username: currentPath === "/register" ? "" : "",  // Ensure username is always a string
     });
     setErrors({});
+    setBackendError("");
   }, [currentPath]);
 
   return (
@@ -101,12 +113,12 @@ const Signin = () => {
         <div className={`form-container sign-in ${currentPath === "/login" ? "active" : ""}`}>
           <form onSubmit={onSubmit}>
             <h1>Sign In</h1>
+            {backendError && <h3 className="error-message" style={{ color: "red" }}>{backendError}</h3>}
             <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} />
             {errors.email && <span>{errors.email}</span>}
             <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} />
             {errors.password && <span>{errors.password}</span>}
-            <a href="#">Forgot Your Password?</a>
-            <button type="submit">Login</button>
+            <button type="submit">Sign In</button>
           </form>
         </div>
 
@@ -114,6 +126,6 @@ const Signin = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Signin;

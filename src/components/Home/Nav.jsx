@@ -16,7 +16,7 @@ const Navbar=()=>{
     const isDarkMode = useSelector((store)=>store.theme.isDarkMode)
     const dispatch = useDispatch();
     const [currclass, setcurrentclass] = useState("");
-    const [profilePic, setProfilePic] = useState('/src/assets/images/default-profile.png');
+    const [profilePic, setProfilePic] = useState('/src/assets/images/default-profile.jpg');
     const sidebarRef = useRef(null);
     const profileRef = useRef(null);
     useEffect(() => {

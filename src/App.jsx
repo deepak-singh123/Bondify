@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import './App.css';
 import { fetchUserData } from './store/userSlice';
 import { Outlet } from 'react-router-dom';
+import { fetchuserposts } from './store/postSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -19,7 +20,11 @@ function App() {
       document.body.classList.remove('dark-mode');
     }
   }, [isDarkMode]);
-
+  useEffect(() => {
+    dispatch(fetchuserposts())
+        .unwrap()
+        .catch(err => console.error('Failed to fetch posts:', err));
+}, [dispatch]);
   return <Outlet />;
 }
 

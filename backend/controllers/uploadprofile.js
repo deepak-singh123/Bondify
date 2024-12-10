@@ -1,11 +1,11 @@
 import cloudinary from 'cloudinary'
 import fs from 'fs/promises';
-import { redirect } from 'react-router-dom';
+
+
 const uploadprofile = async (req, res) => {
 if(!req.file ){
     return res.status(400).json({ message: 'No file uploaded' });
 }
-
 
 try{
 const result = await cloudinary.v2.uploader
