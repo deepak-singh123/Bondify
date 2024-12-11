@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../store/userSlice";
-import { use } from "react";
 
 const Sidebar = ({currclass, sidebarRef}) => {
     const navigate = useNavigate();
@@ -32,6 +31,17 @@ const Sidebar = ({currclass, sidebarRef}) => {
         }
     };
 
+    const handleButtonClick = (e, item) => {
+        e.stopPropagation(); // Prevent event from bubbling up
+        setActiveItem(item.id);
+        item.onClick();
+    };
+
+    const handleLogoutClick = (e) => {
+        e.stopPropagation(); // Prevent event from bubbling up
+        handleLogout();
+    };
+
     const menuItems = [
         { id: 'home', icon: <RiHome5Fill />, label: 'Home', onClick: () => navigate('/home') },
         { id: 'account', icon: <RiAccountCircleFill />, label: 'Account', onClick: () => navigate('/account') },
@@ -45,17 +55,14 @@ const Sidebar = ({currclass, sidebarRef}) => {
                     <div
                         key={item.id}
                         className={`sidebar-btn ${activeItem === item.id ? 'active' : ''}`}
-                        onClick={() => {
-                            setActiveItem(item.id);
-                            item.onClick();
-                        }}
+                        onClick={(e) => handleButtonClick(e, item)}
                     >
                         {item.icon}
                         <span>{item.label}</span>
                     </div>
                 ))}
                 
-                <div className="sidebar-btn" onClick={handleLogout}>
+                <div className="sidebar-btn" onClick={handleLogoutClick}>
                     <CiLogout />
                     <span>Logout</span>
                 </div>

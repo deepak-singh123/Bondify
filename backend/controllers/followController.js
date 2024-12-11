@@ -1,8 +1,8 @@
-import { user as User } from '../models/user.js';
+import { user } from "../models/user.js";
 
 export const followUser =  async (req,res)=>{
    const curruser = req.user;
-   const followuser = await User.findById(req.params.id);
+   const followuser = await user.findById(req.params.id);
 
    if(!followuser){
        return res.status(404).json({ message: "User not exist to follow" });
@@ -23,7 +23,7 @@ export const followUser =  async (req,res)=>{
 
 export const unfollowUser = async(req,res)=>{
     const curruser = req.user;
-    const unfollowuser = await User.findById(req.params.id);
+    const unfollowuser = await user.findById(req.params.id);
     
     if(!unfollowuser){
         return res.status(404).json({message:"User not exist to unfollow"})
@@ -41,7 +41,7 @@ export const unfollowUser = async(req,res)=>{
 export const getFollowers = async(req,res)=>{
     const curruser =req.user;
     if(curruser){
-    const followers = await curruser.followers.populate('followers'," username profilePicture");
+        const followers = await user.findById(curruser._id).populate('followers'," username profilePicture");
 
     if(followers){
         res.status(200).json(followers);
@@ -56,7 +56,7 @@ else{
 export const getFollowing = async (req,res)=>{
     const curruser = req.user;
     if(curruser){
-        const following = await curruser.following.populate('following'," username profilePicture");
+        const following = await user.findById(curruser._id).populate('following'," username profilePicture");
 
         if(following){
             res.status(200).json(following);

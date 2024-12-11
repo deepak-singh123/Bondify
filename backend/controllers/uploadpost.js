@@ -9,7 +9,6 @@ const uploadpost = async (req, res) => {
             content: req.body.content || ''
         };
 
-        // Handle image upload if file is present
         if (req.file) {
             const result = await cloudinary.v2.uploader.upload(req.file.path, {
                 folder: 'Bondify/Posts',
@@ -20,8 +19,9 @@ const uploadpost = async (req, res) => {
             });
 
             postData.postimage = result.secure_url;
+            postData.postname = result.public_id;
 
-            // Clean up the temporary file
+
             await fs.unlink(req.file.path).catch((err) =>
                 console.error('Failed to delete file:', err)
             );

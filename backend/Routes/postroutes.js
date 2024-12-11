@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import upload from "../middlware/multer.js";
 import uploadpost from "../controllers/uploadpost.js";
-import { allposts} from "../controllers/allposts.js";
+import { allposts, deletepost} from "../controllers/allposts.js";
 
 
 const app = express();
@@ -17,5 +17,7 @@ app.use(cors());
 const postroutes =  express.Router();
 
 postroutes.post("/create",upload.single('postimage'),isauthenticated,uploadpost);
+postroutes.post("/delete/:id",isauthenticated,deletepost);
 postroutes.get("/allposts",isauthenticated,allposts);
+
 export default postroutes

@@ -9,18 +9,18 @@ const Postlist = () => {
 
     const dispatch = useDispatch();
     const {curruserposts, connectionposts, allusersposts} = useSelector((store)=>store.userposts);
+    const curruser = useSelector((store)=>store.user.user);
     const { loading, error } = useSelector((store) => store.userposts);
 
    
    
     const postslist = [...curruserposts, ...connectionposts, ...allusersposts];
-    console.log('Posts data:', postslist);
     return (
         <div className="postlist-container">
             
             {postslist.map((post)=>{
                 return(
-                    <Post key={post._id} post={post}/>
+                    <Post key={post._id} post={post} curruser={curruser}/>
                 )
             })}
            

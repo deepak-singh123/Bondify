@@ -8,8 +8,11 @@ const Home=()=>{
     return(
     <div className="home-container">
     <Navbar/>
+
+    <div className="central-postlist-container">
     <Createpost/>
     <Postlist/>
+    </div>
         </div>
     )
 }
