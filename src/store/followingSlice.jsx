@@ -11,7 +11,7 @@ export const fetchfollowinginfo = createAsyncThunk(
     'followinginfo/fetchfollowinginfo',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch("/user/following", {
+            const response = await fetch("/user/connections/following", {
                 method: "GET",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}

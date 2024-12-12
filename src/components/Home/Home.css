@@ -92,10 +92,57 @@ body {
 
 .search-bar input::placeholder {
     color: var(--text-secondary);
+    font-size: 0.875rem;
 }
 
 .search-bar span {
     color: var(--text-secondary);
+}
+
+.search-bar {
+    position: relative;
+    width: 100%;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%; 
+    width: 17rem;
+    left: 11rem;
+    background-color: var(--bg-primary);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; 
+    max-height: 300px; 
+    overflow-y: auto; 
+}
+
+.search-result {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--text-secondary);
+    color:var(--text-primary);
+    gap: 1rem;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bolder;
+    transition: background-color 0.2s;
+}
+
+.search-result:hover {
+    background-color: var(--bg-tertiary); 
+}
+
+.user-image {
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    margin-right: 10px; 
+}
+
+.username {
+    font-size: 16px;
 }
 
 .navbar-right {
@@ -217,7 +264,7 @@ body {
     flex-direction: column;
     gap: 10px;
     padding: 0 15px;
-    margin-top: 60px;
+    
 }
 
 .sidebar-btn {
@@ -506,6 +553,34 @@ body {
 .post-menu-option.active{
     display: flex;
 }
+
+.follow-button {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.follow-button:hover {
+    background-color: #0056b3; 
+    transform: translateY(-2px); 
+}
+
+.follow-button:active {
+    transform: translateY(0); 
+}
+
+.follow-button.following {
+    background-color: #28a745; 
+}
+
+.follow-button.following:hover {
+    background-color: #218838;
+}
 .post-content {
     margin-bottom: 16px;
     color: var(--text-primary);
@@ -600,4 +675,47 @@ body {
         border-radius: 0;
         margin: 0.5rem 0;
     }
+}
+
+
+/********************Person Profile*******************/
+.userinfo-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.profile-picture {
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.username {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: space-around;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-count {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
 }

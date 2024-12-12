@@ -29,17 +29,17 @@ function App() {
         .catch(err => console.error('Failed to fetch posts:', err));
 }, [dispatch]);
 
-/*useEffect(() => {
+useEffect(() => {
     dispatch(fetchfollowinginfo())
         .unwrap()
         .catch(err => console.error('Failed to fetch following info:', err));
 }, [dispatch]);
 
 useEffect(() => {
-    dispatch(fetchfollowersinfo())
-        .unwrap()
-        .catch(err => console.error('Failed to fetch followers info:', err));
-}, [dispatch]);*/
+  dispatch(fetchfollowersinfo())
+      .unwrap()
+      .catch(err => console.error('Failed to fetch followers info:', err));
+}, [dispatch]);
 
 
   return <Outlet />;

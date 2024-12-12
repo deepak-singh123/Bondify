@@ -5,7 +5,8 @@ import themeReducer from "./themeSlice";
 import { userpostReducer } from "./postSlice";
 import followersinfoReducer from "./followersSlice"; 
 import followinginfoReducer from "./followingSlice"; 
-
+import searchReducer from "./searchSlice";
+import userinfoReducer from "./userinfoSlice";
 export const store = configureStore({
     reducer: {
         user: userReducer,
@@ -13,7 +14,9 @@ export const store = configureStore({
         theme: themeReducer,
         userposts:userpostReducer,
         followinginfo: followinginfoReducer,
-        followersinfo: followersinfoReducer
+        followersinfo: followersinfoReducer,
+        search: searchReducer,
+        userinfo:userinfoReducer
        
     }
 }); 

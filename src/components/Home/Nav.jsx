@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FaSearch } from "react-icons/fa";
 import { MdPeopleAlt } from "react-icons/md";
 import { MdMessage } from "react-icons/md";
 import { IoIosNotifications } from "react-icons/io";
@@ -10,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { toggleTheme } from "../../store/themeSlice";
 import Sidebar from "./Sidebar";
+import Searchbar from "./searchbar";
 
 const Navbar=()=>{
     const curruser = useSelector((store)=>store.user.user)
@@ -19,12 +19,17 @@ const Navbar=()=>{
     const [profilePic, setProfilePic] = useState('/src/assets/images/default-profile.jpg');
     const sidebarRef = useRef(null);
     const profileRef = useRef(null);
+    const [query, setQuery] = useState('');
+    const [showResults, setShowResults] = useState(false);
+    const searchRef = useRef(null);
+    const searchresultRef = useRef(null);
+    const themeRef = useRef(null);
+
     useEffect(() => {
         const checkProfilePicture = () => {
             if (curruser?.profilePicture) {
                 setProfilePic(curruser.profilePicture);
             } else if (curruser) {
-                // If user exists but no profile picture, retry after a short delay
                 setTimeout(checkProfilePicture, 500);
             }
         };
@@ -43,6 +48,21 @@ const Navbar=()=>{
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target) && !searchresultRef.current.contains(event.target) && 
+            !themeRef.current.contains(event.target)) {
+                setQuery('');
+                setShowResults(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [query]);
+
     const handlesidebar=(e)=>{
        if(currclass===""){
         setcurrentclass("move-aside");
@@ -63,13 +83,10 @@ const Navbar=()=>{
                 <div className="navbar-logo">
                     <Link to="/home"><img src="/src/assets/images/bondify-logo.png" alt="Logo" /></Link>
                 </div>
-                <div className="search-bar">
-                    <input type="text" placeholder="Search" />
-                    <span><FaSearch />  </span>
-                </div>
+                <Searchbar   searchRef={searchRef} searchresultRef={searchresultRef} query={query} setQuery={setQuery} showResults={showResults} setShowResults={setShowResults}/>
             </div>
             <div className="navbar-right">
-                <button className="theme-toggle" onClick={handleThemeToggle}>
+                <button   ref={themeRef} className="theme-toggle" onClick={handleThemeToggle}>
                     {isDarkMode ? <BsSun /> : <BsMoonStars />}
                 </button>
                 <MdPeopleAlt />

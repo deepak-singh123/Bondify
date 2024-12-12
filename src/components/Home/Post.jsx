@@ -1,21 +1,77 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { se } from 'date-fns/locale';
 import { useDispatch, useSelector } from 'react-redux';
 import { use } from 'react';
+import { fetchfollowinginfo } from '../../store/followingSlice';
 
 const Post = ({ post,curruser }) => {
     const [showMenu, setShowMenu] = React.useState(false);
     const dispatch = useDispatch();
-    //let followers = useSelector((store) => store.followersinfo.followers); 
+    const  followers = useSelector((store) => store.followersinfo); 
+    const following = useSelector((store) => store.followinginfo.following);
+    const [isFollowing, setIsFollowing] = useState("Follow");
     const handlemenu = () => {
         if(!showMenu)setShowMenu(!showMenu);
         else{
             setShowMenu(!showMenu);
         }
       };
+
+      const handlefollow=async(followid)=>{
+        try {
+           
+            const _id=followid.toString();
+            if( following.some(user => user._id === _id)){
+              
+                const response =  await fetch(`http://localhost:3000/user/connections/${followid}/unfollow`,{
+                    method:"POST",
+                    credentials: 'include',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                setIsFollowing("Follow");
+                if(!response.ok)throw new Error("Failed to unfollow");
+                const data = await response.json();
+                console.log(data);
+                dispatch(fetchfollowinginfo());
+                
+            }
+            else{
+                const response =  await fetch(`http://localhost:3000/user/connections/${followid}/follow`,{
+                    method:"POST",
+                    credentials: 'include',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                setIsFollowing("Following");
+                if(!response.ok)throw new Error("Failed to follow");
+                const data = await response.json();
+                console.log(data);
+                dispatch(fetchfollowinginfo());
+               
+            }
+                
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        useEffect(() => {
+
+            if(following.some(user => user._id === post.author_id._id)){
+                setIsFollowing("Following");
+              }
+              else{
+                setIsFollowing("Follow");
+              }
+            },[handlefollow,following]);
+          
+
+
+
+
 
     const handledelete=async(postid)=>{
         try {
@@ -64,7 +120,7 @@ const Post = ({ post,curruser }) => {
                 </button>
                 </div> 
             ):(
-                <button className='follow-button'>Follow</button>
+                <button onClick={()=>handlefollow(post.author_id._id)} className='follow-button'>{isFollowing}</button>
             )}
             </div>
 

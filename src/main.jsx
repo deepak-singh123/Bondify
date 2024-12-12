@@ -10,6 +10,7 @@ import PathUpdater from './routing/pathupdate.jsx'
 import ProfileUpload from './components/Profileupload/ProfileUpload.jsx'
 import Home from './components/Home/Home.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Infopage from './components/Profile-Info/Infopage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
   }, 
   { path: "/register", element: <Signin /> },
   { path: "/login", element: <Signin /> },
+  {path:"/Profileinfo", element:<ProtectedRoute><Infopage/></ProtectedRoute>}
 ]);
 
 createRoot(document.getElementById('root')).render(

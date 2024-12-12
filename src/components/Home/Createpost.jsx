@@ -66,7 +66,6 @@ const Createpost = () => {
         setError('');
         setSuccess('');
 
-        // Input validation
         if (!file && !postText.trim()) {
             setError('Please add an image or write something to post');
             setLoading(false);
@@ -74,20 +73,16 @@ const Createpost = () => {
         }
 
         const formdata = new FormData();
-        
-        // Always append content even if empty
+
         formdata.append("content", postText.trim());
 
-        // Only append file if it exists
         if (file) {
-            // Validate file type
             const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
             if (!validTypes.includes(file.type)) {
                 setError('Please select a valid image file (JPEG, PNG, or GIF)');
                 setLoading(false);
                 return;
             }
-            // Validate file size (5MB limit)
             if (file.size > 5 * 1024 * 1024) {
                 setError('Image size should be less than 5MB');
                 setLoading(false);
@@ -102,11 +97,10 @@ const Createpost = () => {
                 credentials: 'include',
                 body: formdata
             });
-            
+
             const result = await response.json();
             if (response.ok) {
                 setSuccess('Post created successfully!');
-                // Reset form only on success
                 setPostText('');
                 setfile(null);
                 setSelectedImage(null);
@@ -146,7 +140,7 @@ const Createpost = () => {
                 >
                     {loading ? 'Posting...' : 'Post'}
                 </button>
-               
+
             </div>
 
             {isExpanded && (

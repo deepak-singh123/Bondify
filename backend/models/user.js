@@ -6,8 +6,8 @@ const userschema = new mongoose.Schema({
     password: { type: String, required: true },
     profilePicture: { type: String, default: "" },
     bio: { type: String, maxLength: 160 , default:"" },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     role:{type:String,default:"user"}

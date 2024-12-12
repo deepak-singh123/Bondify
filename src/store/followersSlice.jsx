@@ -8,10 +8,10 @@ const initialState = {
 };
 
  export   const fetchfollowersinfo = createAsyncThunk(
-    'followinfo/fetchfollowersinfo',
+    'followersinfo/fetchfollowersinfo',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch("/user/followers", {
+            const response = await fetch("/user/connections/followers", {
                 method: "GET",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}

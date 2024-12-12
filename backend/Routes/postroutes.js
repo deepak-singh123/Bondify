@@ -7,7 +7,6 @@ import upload from "../middlware/multer.js";
 import uploadpost from "../controllers/uploadpost.js";
 import { allposts, deletepost} from "../controllers/allposts.js";
 
-
 const app = express();
 app.use(cookieParser());
 app.use(express.json())
