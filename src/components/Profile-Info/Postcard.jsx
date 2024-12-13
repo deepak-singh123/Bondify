@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { CiMenuKebab } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
@@ -6,29 +6,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchfollowinginfo } from '../../store/followingSlice';
 import { handlefollow } from '../../store/followersSlice';
 
-const Post = ({ post, curruser }) => {
+
+
+
+
+
+
+const Postcard = ({post,curruser})=>{
+
     const [showMenu, setShowMenu] = React.useState(false);
-    const [isFollowing, setIsFollowing] = React.useState("Follow");
     const dispatch = useDispatch();
+    const [isFollowing, setIsFollowing] = useState("Follow");
     const following = useSelector((store) => store.followinginfo.following);
-
-    // Toggle menu visibility
-    const handlemenu = () => setShowMenu(!showMenu);
-
-    // Update `isFollowing` when `following` or `post.author_id._id` changes
+    const cuser = useSelector((store) => store.user.user);
     useEffect(() => {
-        if (following && post.author_id && post.author_id._id) {
-            const isUserFollowing = following.some(user => user._id === post.author_id._id);
+        if (following && curruser._id) {
+            const isUserFollowing = following.some(user => user._id === curruser._id);
             setIsFollowing(isUserFollowing ? "Following" : "Follow");
         }
-    }, [following, post.author_id]);
-
-    // Handle follow/unfollow logic
+    }, [following, curruser._id]  );
     const handleFollowClick = () => {
-        handlefollow(post.author_id._id, following, dispatch);
-        // Optimistically update the UI
+        handlefollow(curruser._id, following, dispatch);
         setIsFollowing(prev => (prev === "Follow" ? "Following" : "Follow"));
     };
+
 
     const handledelete = async (postid) => {
         try {
@@ -46,24 +47,26 @@ const Post = ({ post, curruser }) => {
             console.log(error);
         }
     };
-    console.log("post.author_id._id",post);
+
+
     return (
-        <div className="post">
+            <>
+                   <div className="post">
             <div className="post-header-container">
                 <div className="post-header">
                     <img
-                        src={post.author_id.profilePicture || '/default-avatar.png'}
-                        alt={post.author_id.username}
+                        src={post.postimage || '/default-avatar.png'}
+                        alt={curruser.username}
                         className="post-user-avatar"
                     />
                     <div className="post-user-info">
-                        <h4 className="post-username">{post.author_id.username}</h4>
+                        <h4 className="post-username">{curruser.username}</h4>
                         <p className="post-timestamp">
-                            {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                        
                         </p>
                     </div>
                 </div>
-                {curruser._id === post.author_id._id ? (
+                {curruser._id === cuser._id ? (
                     <div className="post-menu-container">
                         <div className='post-menu'>
                             <button
@@ -106,8 +109,13 @@ const Post = ({ post, curruser }) => {
                     <span className="post-action-count">{post.comments?.length || 0}</span>
                 </button>
             </div>
-        </div>
-    );
-};
+        </div> 
+            
+            
+            
+            </>
+    )
 
-export default Post;
+}
+
+export default Postcard

@@ -50,18 +50,23 @@ const Navbar=()=>{
     }, []);
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (searchRef.current && !searchRef.current.contains(event.target) && !searchresultRef.current.contains(event.target) && 
-            !themeRef.current.contains(event.target)) {
+        const handlesearchOutside = (event) => {
+            if (
+                searchRef.current &&
+                searchresultRef.current &&
+                !searchRef.current.contains(event.target) &&
+                !searchresultRef.current.contains(event.target)
+            ) {
                 setQuery('');
                 setShowResults(false);
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handlesearchOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handlesearchOutside);
         };
     }, [query]);
+    
 
     const handlesidebar=(e)=>{
        if(currclass===""){
@@ -73,6 +78,7 @@ const Navbar=()=>{
     }
 
     const handleThemeToggle = () => {
+        
         dispatch(toggleTheme());
     };
 
@@ -86,7 +92,7 @@ const Navbar=()=>{
                 <Searchbar   searchRef={searchRef} searchresultRef={searchresultRef} query={query} setQuery={setQuery} showResults={showResults} setShowResults={setShowResults}/>
             </div>
             <div className="navbar-right">
-                <button   ref={themeRef} className="theme-toggle" onClick={handleThemeToggle}>
+                <button    className="theme-toggle" onClick={handleThemeToggle}>
                     {isDarkMode ? <BsSun /> : <BsMoonStars />}
                 </button>
                 <MdPeopleAlt />

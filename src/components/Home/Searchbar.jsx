@@ -27,7 +27,7 @@ const Searchbar = ({searchRef, searchresultRef, query, setQuery ,showResults, se
     const handleResultClick = async (user) => {
         try {
             await dispatch(fetchuserinfo(user._id)).unwrap();
-            navigate("/Profileinfo");
+            navigate(`/Profileinfo/${user._id}`);
         } catch (err) {
             console.error("Error fetching user info:", err);
         }

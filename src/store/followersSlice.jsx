@@ -1,11 +1,55 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { useSelector } from "react-redux";
+import { fetchfollowinginfo } from "./followingSlice";
+import { setIsFollowing } from "./isFollowingSlice";
 
 const initialState = {
     followers: [],
     loading: false,
     error: null
 };
+
+
+export   const handlefollow=async(followid,following,dispatch)=>{
+    console.log("Handlefollow called");
+    try {
+       
+        const _id=followid.toString();
+        if( following.some(user => user._id === followid)){
+          
+            const response =  await fetch(`http://localhost:3000/user/connections/${followid}/unfollow`,{
+                method:"POST",
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'}
+            });
+            dispatch(setIsFollowing("Follow"))
+            if(!response.ok)throw new Error("Failed to unfollow");
+            const data = await response.json();
+            console.log(data);
+            dispatch(fetchfollowinginfo());
+            
+        }
+        else{
+            const response =  await fetch(`http://localhost:3000/user/connections/${followid}/follow`,{
+                method:"POST",
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'}
+            });
+            dispatch(setIsFollowing("Following"));
+            if(!response.ok)throw new Error("Failed to follow");
+            const data = await response.json();
+            console.log(data);
+            dispatch(fetchfollowinginfo());
+           
+        } } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+
+
+
 
  export   const fetchfollowersinfo = createAsyncThunk(
     'followersinfo/fetchfollowersinfo',

@@ -10,9 +10,18 @@ import { fetchfollowersinfo } from './store/followersSlice';
 function App() {
   const dispatch = useDispatch();
   const isDarkMode = useSelector((store) => store.theme.isDarkMode);
-
+  
   useEffect(() => {
     dispatch(fetchUserData());
+    dispatch(fetchuserposts())
+    .unwrap()
+    .catch(err => console.error('Failed to fetch posts:', err));
+    dispatch(fetchfollowinginfo())
+    .unwrap()
+    .catch(err => console.error('Failed to fetch following info:', err));
+    dispatch(fetchfollowersinfo())
+    .unwrap()
+    .catch(err => console.error('Failed to fetch followers info:', err));
   }, [dispatch]);
 
   useEffect(() => {
@@ -23,24 +32,7 @@ function App() {
     }
   }, [isDarkMode]);
 
-  useEffect(() => {
-    dispatch(fetchuserposts())
-        .unwrap()
-        .catch(err => console.error('Failed to fetch posts:', err));
-}, [dispatch]);
-
-useEffect(() => {
-    dispatch(fetchfollowinginfo())
-        .unwrap()
-        .catch(err => console.error('Failed to fetch following info:', err));
-}, [dispatch]);
-
-useEffect(() => {
-  dispatch(fetchfollowersinfo())
-      .unwrap()
-      .catch(err => console.error('Failed to fetch followers info:', err));
-}, [dispatch]);
-
+  
 
   return <Outlet />;
 }
