@@ -46,7 +46,6 @@ const Post = ({ post, curruser }) => {
             console.log(error);
         }
     };
-    console.log("post.author_id._id",post);
     return (
         <div className="post">
             <div className="post-header-container">

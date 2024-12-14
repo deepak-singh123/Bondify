@@ -1,8 +1,10 @@
+import { se } from "date-fns/locale";
 import Post from "../Home/Post";
 
 
 
 const Postsinfo = ({userinfo,getpersondetail})=>{
+    
     const person =userinfo.person;
     const personpost = userinfo.personposts;
     return(
@@ -12,7 +14,7 @@ const Postsinfo = ({userinfo,getpersondetail})=>{
         <div className="postsinfo-container">
             <div className="postsinfo-posts">
                 {personpost.map((post, index) => (
-                    <img onClick={() => {getpersondetail(personpost,person)}}
+                    <img onClick={() => {getpersondetail(post,person)}}
                         key={index}
                         className="postsinfo-img"
                         src={post.postimage}

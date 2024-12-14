@@ -10,7 +10,7 @@ const userdata= async (req,res)=>{
     if (!person) {
         return res.status(404).json({ message: "User not found" });
     }
-    const personposts = await Post.find({ author_id: person._id }).sort({ createdAt: -1 });
+    const personposts = await Post.find({ author_id: person._id }).sort({ createdAt: -1 }).populate('author_id', 'username profilePicture');;
     
     res.status(200).json({person,personposts});
     }

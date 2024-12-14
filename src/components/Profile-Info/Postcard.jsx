@@ -8,29 +8,29 @@ import { handlefollow } from '../../store/followersSlice';
 
 
 
-
-
-
-
 const Postcard = ({post,curruser})=>{
 
     const [showMenu, setShowMenu] = React.useState(false);
     const dispatch = useDispatch();
     const [isFollowing, setIsFollowing] = useState("Follow");
     const following = useSelector((store) => store.followinginfo.following);
-    const cuser = useSelector((store) => store.user.user);
+
     useEffect(() => {
         if (following && curruser._id) {
             const isUserFollowing = following.some(user => user._id === curruser._id);
             setIsFollowing(isUserFollowing ? "Following" : "Follow");
         }
     }, [following, curruser._id]  );
+
     const handleFollowClick = () => {
         handlefollow(curruser._id, following, dispatch);
         setIsFollowing(prev => (prev === "Follow" ? "Following" : "Follow"));
     };
 
 
+    const handlemenu = () => setShowMenu(!showMenu);
+
+    console.log(post);
     const handledelete = async (postid) => {
         try {
             const response = await fetch(`http://localhost:3000/user/post/delete/${postid}`, {
@@ -48,25 +48,24 @@ const Postcard = ({post,curruser})=>{
         }
     };
 
-
     return (
             <>
-                   <div className="post">
+                  <div className="post">
             <div className="post-header-container">
                 <div className="post-header">
                     <img
-                        src={post.postimage || '/default-avatar.png'}
-                        alt={curruser.username}
+                        src={post.author_id.profilePicture || '/default-avatar.png'}
+                        alt={post.author_id.username}
                         className="post-user-avatar"
                     />
                     <div className="post-user-info">
-                        <h4 className="post-username">{curruser.username}</h4>
+                        <h4 className="post-username">{post.author_id.username}</h4>
                         <p className="post-timestamp">
-                        
+                            {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                         </p>
                     </div>
                 </div>
-                {curruser._id === cuser._id ? (
+                {curruser._id === post.author_id._id ? (
                     <div className="post-menu-container">
                         <div className='post-menu'>
                             <button
@@ -109,8 +108,7 @@ const Postcard = ({post,curruser})=>{
                     <span className="post-action-count">{post.comments?.length || 0}</span>
                 </button>
             </div>
-        </div> 
-            
+        </div>
             
             
             </>

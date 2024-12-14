@@ -9,21 +9,27 @@ import Post from "../Home/Post";
 import { BsPostcard } from "react-icons/bs";
 import Postcard from "./postcard";
 
+
 const Infopage = () => {
     const { id } = useParams(); 
     const dispatch = useDispatch();
     const userinfo = useSelector((store) => store.userinfo.user);
+    const currser = useSelector((store) => store.user.user);
+    
     const isEmpty = (obj) => Object.keys(obj).length === 0;
     const [personpost, setpersonpost] = useState({});
     const [person, setperson] = useState({});
+    const curruser = useSelector((store) => store.user.user);
+    const [isactive,setisactive]= useState(false);
+
     const getpersondetail = (personpost, person) => {
    
             setpersonpost(personpost);
             setperson(person);
+            setisactive(true);
        
     };
     
-    console.log(personpost);
  
 
     useEffect(() => {
@@ -52,9 +58,9 @@ const Infopage = () => {
                 
             
             <Userinfo userinfo={userinfo} />
-            <div className="postdetail">        
-    {personpost && person ? (
-       <Postcard post={personpost} curruser={person} />
+            <div className="postdetail ">        
+    {!isEmpty(personpost) && isactive ? (
+       <Postcard post={personpost} curruser={curruser} />
     ) : null}
 </div>
 

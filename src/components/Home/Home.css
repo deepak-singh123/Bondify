@@ -770,7 +770,14 @@ body {
 }
 /***********POST-DETAIL************/
 .postdetail{
-  
+  position: absolute;
+  width: 30vw;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate3d(20px,30px,50px);
+  transition: all 5s ease-in-out;
 }
 
 /* Add Media Queries for Responsive Design */
