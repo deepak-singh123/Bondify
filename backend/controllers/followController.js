@@ -44,10 +44,10 @@ export const getFollowers = async (req, res) => {
       const curruser = req.user; 
   
       if (curruser) {
-        const populatedUser = await user.findById(curruser._id).populate("followers", "username email profilePicture bio");
+        const followers = await user.findById(curruser._id).populate('followers', "username  profilePicture ");
        
-        if (populatedUser) {
-          res.status(200).json(populatedUser.followers);
+        if (followers) {
+          res.status(200).json(followers);
         } else {
           res.status(404).json({ message: "User not found" });
         }
@@ -63,7 +63,7 @@ export const getFollowing = async (req,res)=>{
     const curruser = req.user;
     if(curruser){
         const following = await user.findById(curruser._id).populate('following'," username profilePicture");
-
+        
         if(following){
             res.status(200).json(following);
         }

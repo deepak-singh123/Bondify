@@ -27,6 +27,14 @@ const Searchbar = ({searchRef, searchresultRef, query, setQuery ,showResults, se
     const handleResultClick = async (user) => {
         try {
             await dispatch(fetchuserinfo(user._id)).unwrap();
+            const response = await fetch(`/user/views/${user._id}`, {
+                method: "POST",
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if(!response.ok)throw new Error("Failed to fetch user info");   
             navigate(`/Profileinfo/${user._id}`);
         } catch (err) {
             console.error("Error fetching user info:", err);

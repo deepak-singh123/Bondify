@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../Home/Nav";
 import Userinfo from "./Userinfo";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchuserinfo } from "../../store/userinfoSlice";
 import Postsinfo from "./postsinfo";
 import Post from "../Home/Post";
@@ -21,16 +21,33 @@ const Infopage = () => {
     const [person, setperson] = useState({});
     const curruser = useSelector((store) => store.user.user);
     const [isactive,setisactive]= useState(false);
-
+    const [infobackground,setinfobackground]= useState(" ");
+    const postdetailRef = useRef(null);
     const getpersondetail = (personpost, person) => {
    
             setpersonpost(personpost);
             setperson(person);
             setisactive(true);
+            setinfobackground("active");
        
     };
     
- 
+    
+    useEffect(() => {
+        const handlepostinfoutside = (event) => {
+            if (
+                postdetailRef.current &&
+                !postdetailRef.current.contains(event.target)
+            ) {
+               setisactive(false);
+               setinfobackground(" ");
+            }
+        };
+        document.addEventListener('mousedown', handlepostinfoutside);
+        return () => {
+            document.removeEventListener('mousedown', handlepostinfoutside);
+        };
+    }, []);
 
     useEffect(() => {
         if (isEmpty(userinfo)) {
@@ -52,19 +69,20 @@ const Infopage = () => {
     }
 
     return (
-        <div className="infopage">
+        <div className={`infopage `}>
             <Navbar />
-            <div className="infopage-content">
+            <div className={`infopage-content ${infobackground}`}>
                 
             
-            <Userinfo userinfo={userinfo} />
-            <div className="postdetail ">        
+           <div className={`userinfo ${infobackground}`}> <Userinfo  userinfo={userinfo} /></div>
+
+            <div  ref={postdetailRef} className={`postdetail ${infobackground}`}>        
     {!isEmpty(personpost) && isactive ? (
        <Postcard post={personpost} curruser={curruser} />
     ) : null}
 </div>
 
-            <Postsinfo userinfo={userinfo} getpersondetail={getpersondetail} />
+           <div className={`postsinfo ${infobackground}`} ><Postsinfo userinfo={userinfo} getpersondetail={getpersondetail} /></div>
             </div>
         </div>
     );

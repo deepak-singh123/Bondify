@@ -311,6 +311,7 @@ body {
     color: var(--accent-color);
 }
 
+/***********USER-CARD***********/
 
 /* Create Post Styles */
 .create-post {
@@ -632,7 +633,7 @@ body {
     align-items: center;
     width: 100vw;
     height: 100vh;
-    user-select: none;
+    
 }
 .infopage-content {
     display: flex;
@@ -641,11 +642,32 @@ body {
     width: 100%;
     height: 100%;
 }
+.userinfo{
+    width: 22%;
+    
+}
+.views-count{
+    display: flex;
+    gap: .2rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem ;
+}
+  
+.userinfo-card.mainuser{
+    position: fixed;
+    left: 2.5rem;
+    top: 5rem;
+    width: 350px;
+    height: fit-content;
+}
 .userinfo-card {
     background: var(--bg-primary);
     border: none;
     border-radius: 15px;
-    width: 25%;
+    width: 100%;
     height: 60%;
     padding: 25px;
     text-align: center;
@@ -678,9 +700,7 @@ body {
 
 .user-stats {
     display: flex;
-    
     justify-content: space-around;
-    padding: 10px 0;
     background: var(--bg-secondary);
     border-radius: 10px;
     margin-top: 20px;
@@ -733,7 +753,7 @@ body {
     display: flex;
     justify-content: center;
     background-color: var(--bg-secondary);
-    width: 65%;
+    width: 100%;
     max-height: 80vh;
     overflow: scroll;
     
@@ -769,16 +789,144 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add a shadow for hover effect */
 }
 /***********POST-DETAIL************/
-.postdetail{
-  position: absolute;
-  width: 30vw;
-  height: 50vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: translate3d(20px,30px,50px);
-  transition: all 5s ease-in-out;
+.infopage-content.active{
+    background-color:gray;
+    
 }
+.userinfo.active{
+    display: none;
+}
+.postsinfo.active{
+    display: none;
+}
+.postdetail {
+    position: absolute;
+    width: 30vw;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden; 
+    transform: scale(0.95); 
+    transition: opacity 0.3s ease, transform .3s ease, visibility 0.3s ease;
+  }
+  
+  .postdetail.active {
+    opacity: 1; 
+    visibility: visible; 
+    transform: scale(1); 
+  }
+  
+
+/***************Followers and follow list*************/
+/* Container for connections lists */
+.connectionslists {
+    position: fixed;
+    right: 2.5rem;
+    top: 5rem;
+    display: flex;
+    flex-direction: column;
+    width: 22%;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    margin: 20px auto;
+}
+
+/* List for followers and following */
+.followers-list, .following-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Individual follower card */
+.follower-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    background: #ffffff;
+    
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.follower-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    border-radius: 10px;
+    background-color: var(--bg-tertiary);
+}
+
+/* Follower Info */
+.follower-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+/* Follower Profile Picture */
+.follower-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007bff;
+}
+
+/* Username */
+.follower-info .username {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+/* Follow Button */
+.follow-button {
+    padding: 8px 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.follow-button:hover {
+    background-color: #0056b3;
+}
+
+.follow-button:active {
+    transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .connectionslists {
+        padding: 15px;
+    }
+
+    .follower-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .follow-button {
+        align-self: flex-end;
+    }
+}
+
 
 /* Add Media Queries for Responsive Design */
 @media screen and (max-width: 768px) {

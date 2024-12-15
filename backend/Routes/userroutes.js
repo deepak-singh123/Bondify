@@ -6,7 +6,7 @@ import cors from "cors"
 import { user } from "../models/user.js"
 
 import allusers from "../controllers/allusers.js";
-import userdata from "../controllers/userdata.js";
+import userdata, { userviews } from "../controllers/userdata.js";
 
 const app = express();
 app.use(cookieParser());
@@ -18,4 +18,5 @@ const userroutes =  express.Router();
 
 userroutes.get("/allusers",isauthenticated,allusers);
 userroutes.get("/:id/info",isauthenticated,userdata);
+userroutes.post("/views/:id",isauthenticated,userviews);
 export default userroutes
