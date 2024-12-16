@@ -2,12 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import pathReducer from "./pathSlice";
 import themeReducer from "./themeSlice";
-import { userpostReducer } from "./postSlice";
+import  userpostReducer  from "./postSlice";
 import followersinfoReducer from "./followersSlice"; 
 import followinginfoReducer from "./followingSlice"; 
 import searchReducer from "./searchSlice";
 import userinfoReducer from "./userinfoSlice";
 import isFollowingReducer from "./isFollowingSlice";
+import alluserReducer from "./alluserSlice";
 export const store = configureStore({
     reducer: {
         user: userReducer,
@@ -18,7 +19,8 @@ export const store = configureStore({
         followersinfo: followersinfoReducer,
         search: searchReducer,
         userinfo:userinfoReducer,
-        isFollowing: isFollowingReducer
+        isFollowing: isFollowingReducer,
+        alluser:alluserReducer
        
     }
 }); 

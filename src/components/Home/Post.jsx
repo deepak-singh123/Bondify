@@ -5,13 +5,16 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchfollowinginfo } from '../../store/followingSlice';
 import { handlefollow } from '../../store/followersSlice';
+import { handleResultClick } from '../../store/userinfoSlice';
+import { useNavigate } from 'react-router-dom';
 
-const Post = ({ post, curruser }) => {
+const Post = ({ post }) => {
     const [showMenu, setShowMenu] = React.useState(false);
     const [isFollowing, setIsFollowing] = React.useState("Follow");
+    const curruser = useSelector((store) => store.user.user);
     const dispatch = useDispatch();
     const following = useSelector((store) => store.followinginfo.following);
-
+    const navigate = useNavigate()
     // Toggle menu visibility
     const handlemenu = () => setShowMenu(!showMenu);
 
@@ -49,7 +52,7 @@ const Post = ({ post, curruser }) => {
     return (
         <div className="post">
             <div className="post-header-container">
-                <div className="post-header">
+                <div onClick={()=>handleResultClick(post.author_id,dispatch,navigate)} className="post-header">
                     <img
                         src={post.author_id.profilePicture || '/default-avatar.png'}
                         alt={post.author_id.username}

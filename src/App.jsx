@@ -7,6 +7,7 @@ import { fetchuserposts } from './store/postSlice';
 import { fetchfollowinginfo } from './store/followingSlice';
 import { fetchfollowersinfo } from './store/followersSlice';
 import { fetchuserinfo } from './store/userinfoSlice';
+import { fetchAllUser } from './store/alluserSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,11 @@ function App() {
     dispatch(fetchfollowersinfo())
       .unwrap()
       .catch(err => console.error('Failed to fetch followers info:', err));
+
+      dispatch(fetchAllUser())
+      .unwrap()
+      .catch(err => console.error('Failed to fetch user data:', err));
+      
   }, [curruser, dispatch]);
 
   // Step 3: Handle dark mode
