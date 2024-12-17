@@ -155,6 +155,10 @@ const Createpost = () => {
                             />
                             <FaImage /> Photo/Video
                         </button>
+                            {selectedImage && (
+                                <img src={selectedImage} alt="Selected Image" />
+                            )}
+                       
                         <button
                             className="option-btn"
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}

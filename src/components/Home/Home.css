@@ -369,7 +369,13 @@ body {
     padding-top: 10px;
     position: relative;
 }
-
+.post-options img{
+    align-items: center;
+    width: 10%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
 .post-options {
     display: flex;
     gap: 15px;
