@@ -32,7 +32,6 @@ export const fetchuserposts = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log("Fetch user posts response:", data); // Log the response for debugging
       return data; // { userposts, connectionpost, alluserspost, hasMore }
     } catch (error) {
       console.error(`Error fetching user posts with args:`, args, error);

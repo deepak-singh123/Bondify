@@ -10,6 +10,8 @@ import { useState, useEffect, useRef } from "react";
 import { toggleTheme } from "../../store/themeSlice";
 import Sidebar from "./Sidebar";
 import Searchbar from "./searchbar";
+import Badge from '@mui/material/Badge';
+
 
 const Navbar=()=>{
     const curruser = useSelector((store)=>store.user.user)
@@ -96,7 +98,9 @@ const Navbar=()=>{
                     {isDarkMode ? <BsSun /> : <BsMoonStars />}
                 </button>
                 <MdPeopleAlt />
-                <MdMessage />
+                <Badge badgeContent={2} color="primary">
+                <Link to="/chat"><MdMessage /></Link>  
+    </Badge>
                 <IoIosNotifications />
                
                 <div ref={profileRef} onClick={(e)=>{handlesidebar(e)}} className={`nav profile-image`}>
