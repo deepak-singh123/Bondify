@@ -11,6 +11,8 @@ import followroutes from "./Routes/followRoutes.js";
 import searchroutes from "./Routes/searchroutes.js";
 import { createServer } from "http"; // Use HTTP for the server
 import { Server } from "socket.io"; // Import Socket.IO
+import messageroutes from "./Routes/messageroutes.js";
+import { Message } from "./models/message.js";
 
 dotenv.config();
 
@@ -32,7 +34,7 @@ app.use('/user', userroutes);
 app.use('/user/post', postroutes); 
 app.use('/user/connections', followroutes); 
 app.use('/user', searchroutes); 
-
+app.use('/messages',messageroutes);
 // Cloudinary setup
 cloudinary.v2.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -63,18 +65,25 @@ const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
     console.log(`A user connected with id ${socket.id}`);
-
+    
+    socket.on("testing", (data) => {
+        console.log("Testing event received:", data);
+    });
+    socket.emit("message","heelo from socket");
     // User is online
     socket.on("user_online", (userId) => {
         onlineUsers.set(userId, socket.id); // Map userId to socketId
         console.log(`User ${userId} is online.`);
-    });
+        io.emit("online_users", [...onlineUsers.keys()]);
 
+    });
     // User sends a message
-    socket.on("send_message", (data) => {
+    socket.on("send_message", async (data) => {
+        console.log(data);
         const { senderId, receiverId, content } = data;
 
         const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
+        console.log("reciever id= ",receiverSocketId);
         if (receiverSocketId) {
             // Deliver the message in real time
             io.to(receiverSocketId).emit("receive_message", {
@@ -83,10 +92,12 @@ io.on("connection", (socket) => {
                 timestamp: new Date(),
             });
             console.log(`Message sent to user ${receiverId}`);
-        } else {
-            console.log(`User ${receiverId} is offline. Message will be saved.`);
+        } 
+           else{ console.log(`User ${receiverId} is offline. Message will be saved.`);}
             // Here you can implement logic to save the message to the database
-        }
+           /* await Message.create({senderId,receiverId,content,timestamp:new Date()});
+            Message.save();*/ 
+        
     });
 
     // User disconnects

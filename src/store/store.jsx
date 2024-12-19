@@ -9,6 +9,8 @@ import searchReducer from "./searchSlice";
 import userinfoReducer from "./userinfoSlice";
 import isFollowingReducer from "./isFollowingSlice";
 import alluserReducer from "./alluserSlice";
+import messagesReducer from "./messagesSlice";
+
 export const store = configureStore({
     reducer: {
         user: userReducer,
@@ -20,7 +22,8 @@ export const store = configureStore({
         search: searchReducer,
         userinfo:userinfoReducer,
         isFollowing: isFollowingReducer,
-        alluser:alluserReducer
+        alluser:alluserReducer,
+        messages:messagesReducer
        
     }
 }); 
