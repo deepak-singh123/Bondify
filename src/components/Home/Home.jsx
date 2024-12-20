@@ -7,12 +7,14 @@ import Usercard from "./Usercard.jsx"
 import { useEffect } from "react"
 import { fetchuserinfo } from "../../store/userinfoSlice.jsx"
 import Connectionslists from "./Connectionslists.jsx"
+import { socket } from "../../App.jsx"
 
 
 const Home=()=>{
     const curruser = useSelector((store)=>store.user.user);
     const dispatch = useDispatch();
- 
+
+    
     return(
     <div className="home-container">
     <Navbar/>

@@ -8,10 +8,11 @@ import { FaImage } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa6";
 import { set } from "mongoose";
 import { addmessage, fetchmessages } from "../../../store/messagesSlice";
-import { socket } from "../../../App";
 import { user } from "../../../../backend/models/user";
+import { socket } from "../../../App";
 
 const Chatlist = () => {
+   
     const followers = useSelector((store) => store.followersinfo.followers);
     const following = useSelector((store) => store.followinginfo.following);
     const [chatperson, setchatperson] = useState(null);
@@ -21,51 +22,90 @@ const Chatlist = () => {
     const [color,setcolor]=useState("error");
     const curruser = useSelector((store) => store.user.user);
     const messages = useSelector((store) => store.messages);
+    const [connectionlist, setConnectionList] = useState([]);
+
     const dispatch = useDispatch();
-    console.log("messages",messages);
-    const connectionlist = [
+   
+   
+    useEffect(() => {
+       const updatedConnectionList = [
         ...followers.filter(
             (follower) => !following.some((follow) => follow.id === follower.id)
         ),
         ...following,
     ];
+        setConnectionList(updatedConnectionList);
+    }, [onlineusers, followers, following]);
 
     useEffect(() => {
+        console.log("emitted online user");
+
         socket.emit("user_online", curruser._id);
 
         socket.on("online_users", (users) => {
+            console.log("online-user= ",users);
            setonlineusers(users);
           });
         
-        
-
-        socket.on("recieve_message",(data)=>{
-          const by =  data.senderId === curruser._id?"self":"friend";
-            messages.push({data,by})
-            
-        })
+      
     }, []); // Empty dependency array to run only on mount
 
-    const handlesendmessage=()=>{
-        const newMessage = { 
-            senderId: curruser._id, 
-            by: "self", 
-            content: message, 
-            timestamp: new Date() 
-          };
-        
-        socket.emit("send_message", {
-            senderId: curruser._id,
-            receiverId: chatperson._id,
-            content: message,
+    useEffect(() => {
+        socket.on("receive_message", (data) => {
+            console.log("received message= ", data);
+            const by = data.senderId === curruser._id ? "self" : "friend";
+            const newMessage = {
+                senderId: data.senderId,
+                by: by,
+                content: data.content,
+                timestamp: data.timestamp,
+            };
+    
+           
+            const messageExists = messages.some(
+                (msg) => msg.content === newMessage.content && msg.timestamp === newMessage.timestamp
+            );
+    
+          
+            if (!messageExists) {
+                dispatch(addmessage(newMessage));
+            }
         });
+    
+        
+        return () => {
+            socket.off("receive_message");
+        };
+    }, [dispatch, messages, curruser._id]);
+    
 
-        dispatch(addmessage(newMessage));
+    const handlesendmessage=()=>{
+        
+        if (message.trim()) {
+            const newMessage = {
+                senderId: curruser._id,
+                by: "self",
+                content: message,
+                timestamp: new Date().toISOString(),
+            };
+
+            // Emit the message using socket
+            socket.emit("send_message", {
+                senderId: curruser._id,
+                receiverId: chatperson._id,
+                content: message,
+            });
+
+            dispatch(addmessage(newMessage));
+            setmessage("");
+        }
+
+       
     }
     
-    useEffect(()=>{
-        if(chatperson){dispatch(fetchmessages(chatperson._id)).unwrap();
-    }},[messages,dispatch]);
+   /* useEffect(()=>{
+        if(chatperson){dispatch(fetchmessages(chatperson._id));
+    }},[messages,dispatch]);*/
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -86,7 +126,6 @@ const Chatlist = () => {
     const handlemessage=(e)=>{
         const message = e.target.value;
         setmessage(message);
-
     }
     
 
@@ -137,21 +176,12 @@ const Chatlist = () => {
                             {messages && messages.map((msg, index) => (
                 <div
                     key={index}
-                    className={`message ${msg.sender === 'self' ? 'sent' : 'received'}`}
+                    className={`message ${msg.by === 'self' ? 'sent' : 'received'}`}
                 >
-                    <div className="chatarea-header">
-                                <div className="follower-card header">
-                                    <div className="follower-info">
-                                        
+                 
+     
 
-                                        <img
-                                            src={msg.sender === 'self'? curruser.profilePicture : chatperson.profilePicture}
-                                            alt={chatperson.username}
-                                        />
-                
-                                    </div>
-                                </div>
-                            </div><p>{msg.content}</p>
+                            <p>{msg.content}</p>
                 </div>
             ))}
             <div ref={messagesEndRef} />
@@ -172,6 +202,7 @@ const Chatlist = () => {
                             </button>
                             <input
                                 type="text"
+                                value={message}
                                 onChange={(e)=>{handlemessage(e)}}
                                 className="chatarea-chat-input"
                                 placeholder="Type a message"

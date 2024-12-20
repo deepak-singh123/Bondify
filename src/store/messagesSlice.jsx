@@ -2,10 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const fetchmessages = createAsyncThunk(
     "messages/fetchmessages",
-    async (id, { getState }) => {
+    async (id) => {
         try {
             // Access the current user
-            const currentUser = getState().user.user;
 
             const response = await fetch(`/messages/getmessages/${id}`, {
                 method: "GET",
@@ -16,10 +15,10 @@ const fetchmessages = createAsyncThunk(
             if (!response.ok) throw new Error("Failed to fetch messages");
 
             const messages = await response.json();
-
+            console.log("messages in slice= ", messages);
             const processedMessages = messages.data.map((message) => ({
                 id: message.id,
-                by: message.sender === currentUser.id ? "self" : "friend",
+                by: message.by,
                 content: message.content,
                 isRead: message.isRead,
                 timestamp: message.timestamp,
@@ -38,6 +37,7 @@ const messagesSlice = createSlice({
     initialState: [],
     reducers: {
         addmessage: (state, action) => {
+            // Add the new message without spreading the current state
             state.push(action.payload);
         },
     },

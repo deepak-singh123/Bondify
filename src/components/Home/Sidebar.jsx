@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../store/userSlice";
+import { socket } from "../../App";
 
 const Sidebar = ({currclass, sidebarRef}) => {
     const navigate = useNavigate();
@@ -40,6 +41,10 @@ const Sidebar = ({currclass, sidebarRef}) => {
     const handleLogoutClick = (e) => {
         e.stopPropagation(); // Prevent event from bubbling up
         handleLogout();
+        
+        socket.disconnect();
+            
+         
     };
 
     const menuItems = [

@@ -12,52 +12,76 @@ import { fetchAllUser } from './store/alluserSlice';
 
 const SOCKET_SERVER_URL = "http://localhost:3000";
 
-// Create and export the socket instance
-export const socket = io(SOCKET_SERVER_URL, {
-  withCredentials: true,
-});
+// Socket instance (can be reinitialized)
+export let socket;
 
 function App() {
-
-  
-
-
   const dispatch = useDispatch();
   const isDarkMode = useSelector((store) => store.theme.isDarkMode);
   const curruser = useSelector((store) => store.user.user);
+
+  // Handle user data fetching on app load
   useEffect(() => {
     dispatch(fetchUserData())
       .unwrap()
       .catch((err) => console.error("Failed to fetch user data:", err));
   }, [dispatch]);
 
-
-
-
   useEffect(() => {
-    if (!curruser || !curruser._id) return;
+    if (curruser && curruser._id) {
+        socket = io(SOCKET_SERVER_URL, { withCredentials: true });
 
-    dispatch(fetchuserinfo(curruser._id))
-      .unwrap()
-      .catch((err) => console.error("Error fetching user info:", err));
+        socket.on("connect", () => {
+            // Emit user_online event whenever the socket reconnects
+            socket.emit("user_online", curruser._id);
+            console.log("Reconnected and user_online emitted");
+        });
 
-    dispatch(fetchuserposts())
-      .unwrap()
-      .catch((err) => console.error("Failed to fetch posts:", err));
+        // Cleanup on unmount
+        return () => {
+            if (socket) {
+                socket.disconnect();
+                console.log("Socket disconnected during cleanup");
+            }
+        };
+    }
+}, [curruser]);
 
-    dispatch(fetchfollowinginfo())
-      .unwrap()
-      .catch((err) => console.error("Failed to fetch following info:", err));
 
-    dispatch(fetchfollowersinfo())
-      .unwrap()
-      .catch((err) => console.error("Failed to fetch followers info:", err));
 
-    dispatch(fetchAllUser())
-      .unwrap()
-      .catch((err) => console.error("Failed to fetch user data:", err));
+
+
+  // Handle socket connection and reinitialization
+  useEffect(() => {
+    if (curruser && curruser._id) {
+       
+      // Fetch user-related data after login
+      dispatch(fetchuserinfo(curruser._id))
+        .unwrap()
+        .catch((err) => console.error("Error fetching user info:", err));
+
+      dispatch(fetchuserposts())
+        .unwrap()
+        .catch((err) => console.error("Failed to fetch posts:", err));
+
+      dispatch(fetchfollowinginfo())
+        .unwrap()
+        .catch((err) => console.error("Failed to fetch following info:", err));
+
+      dispatch(fetchfollowersinfo())
+        .unwrap()
+        .catch((err) => console.error("Failed to fetch followers info:", err));
+
+      dispatch(fetchAllUser())
+        .unwrap()
+        .catch((err) => console.error("Failed to fetch user data:", err));
+
+    }
   }, [curruser, dispatch]);
 
+ 
+
+  // Handle dark mode
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -65,9 +89,6 @@ function App() {
       document.body.classList.remove("dark-mode");
     }
   }, [isDarkMode]);
-
-  
-
 
   return <Outlet />;
 }

@@ -11,9 +11,16 @@ import { toggleTheme } from "../../store/themeSlice";
 import Sidebar from "./Sidebar";
 import Searchbar from "./searchbar";
 import Badge from '@mui/material/Badge';
+import { socket } from "../../App";
+
+
 
 
 const Navbar=()=>{
+
+
+
+
     const curruser = useSelector((store)=>store.user.user)
     const isDarkMode = useSelector((store)=>store.theme.isDarkMode)
     const dispatch = useDispatch();
@@ -26,6 +33,9 @@ const Navbar=()=>{
     const searchRef = useRef(null);
     const searchresultRef = useRef(null);
     const themeRef = useRef(null);
+
+
+
 
     useEffect(() => {
         const checkProfilePicture = () => {

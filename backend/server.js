@@ -65,11 +65,7 @@ const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
     console.log(`A user connected with id ${socket.id}`);
-    
-    socket.on("testing", (data) => {
-        console.log("Testing event received:", data);
-    });
-    socket.emit("message","heelo from socket");
+ 
     // User is online
     socket.on("user_online", (userId) => {
         onlineUsers.set(userId, socket.id); // Map userId to socketId
@@ -85,7 +81,7 @@ io.on("connection", (socket) => {
         const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
         console.log("reciever id= ",receiverSocketId);
         if (receiverSocketId) {
-            // Deliver the message in real time
+            
             io.to(receiverSocketId).emit("receive_message", {
                 senderId,
                 content,
@@ -106,7 +102,14 @@ io.on("connection", (socket) => {
         if (disconnectedUser) {
             onlineUsers.delete(disconnectedUser[0]); // Remove the user from the online list
             console.log(`User ${disconnectedUser[0]} disconnected.`);
+            io.emit("online_users", [...onlineUsers.keys()]);
         }
+    });
+
+
+
+    socket.on("reconnect", () => {
+        console.log(`Socket reconnected: ${socket.id}`);
     });
 });
 

@@ -10,11 +10,11 @@ const Signin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentPath = useSelector((store) => store.path.currentPath);
-
+  const curruser = useSelector((store) => store.user.user);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    username: currentPath === "/register" ? "" : "",  // Ensure username is always a string
+    username: currentPath === "/register" ? "" : "",
   });
 
   const [errors, setErrors] = useState({});
@@ -59,6 +59,7 @@ const Signin = () => {
 
         if (route === "login") {
           // Navigate based on backend response
+        
           navigate(result.redirectTo);
           dispatch(setPath(result.redirectTo));
         } else if (route === "register") {

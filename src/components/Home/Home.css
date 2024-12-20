@@ -1087,7 +1087,7 @@ a {
 
 /* General styling for messages */
 .message {
-    max-width: 70%; /* Prevent messages from taking up the entire width */
+    max-width: 40%; 
     padding: 0.8rem;
     border-radius: 1rem;
     font-size: 1rem;
@@ -1098,7 +1098,7 @@ a {
 /* Received messages */
 .message.received {
     align-self: flex-start; /* Align to the left */
-    background-color: var(--bg-secondary);
+    background-color: var(--border-color);
     color: var(--text-primary);
     border-top-left-radius: 0;
 }
