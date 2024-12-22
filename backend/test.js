@@ -1,0 +1,1 @@
+<script type="text/javascript">var x =4+"4"; console.log(x);</script>

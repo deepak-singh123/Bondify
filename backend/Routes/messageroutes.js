@@ -3,7 +3,8 @@ import { isauthenticated } from "../middlware/isAuthenticated.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
 import cors from "cors"
-import { getMessages, sendmessage } from "../controllers/messages.js";
+import { getMessages, markasread, sendmessage, uploadchatimage } from "../controllers/messages.js";
+import upload from "../middlware/multer.js";
 
 
 const app = express();
@@ -16,7 +17,7 @@ const messageroutes =  express.Router();
 
 messageroutes.post("/send/:id",isauthenticated,sendmessage);
 messageroutes.get("/getmessages/:id",isauthenticated,getMessages);
-
-
+messageroutes.post("/uploadchatimage",upload.single('chatimage'),isauthenticated,uploadchatimage);
+messageroutes.post("/markasread",isauthenticated,markasread);
 
 export default messageroutes

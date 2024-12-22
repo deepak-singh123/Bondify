@@ -13,6 +13,7 @@ import { createServer } from "http"; // Use HTTP for the server
 import { Server } from "socket.io"; // Import Socket.IO
 import messageroutes from "./Routes/messageroutes.js";
 import { Message } from "./models/message.js";
+import { type } from "os";
 
 dotenv.config();
 
@@ -74,25 +75,85 @@ io.on("connection", (socket) => {
 
     });
     // User sends a message
+
+    socket.on("send_image",async(data)=>{
+        try {
+            const { senderId, receiverId, content, createdAt ,by} = data;
+            console.log("Uploading image...");
+            
+            // Upload to Cloudinary
+          
+            if (content) {
+            
+                const receiverSocketId = onlineUsers.get(receiverId);
+    
+    
+                // Emit to receiver if they are online
+                if (receiverSocketId) {
+                    io.to(receiverSocketId).emit("receive_image", {
+                        sender:senderId,
+                        receiver:receiverId,
+                        content: content,
+                        type: "image",
+                        by:"friend",
+                        createdAt,
+                    });
+                }
+    
+                // Save the message to the database
+                await Message.create({
+                    sender: senderId,
+                    receiver: receiverId,
+                    content: content,
+                    type: "image",
+                    isRead: false,
+                    
+                });
+    
+                console.log("Image message saved to the database.");
+            }
+        } catch (error) {
+            console.error("Error during image upload or message handling:", error);
+        }
+        
+    })
+
     socket.on("send_message", async (data) => {
         console.log(data);
-        const { senderId, receiverId, content } = data;
+        const { senderId, receiverId, content ,type,createdAt,by} = data;
 
         const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
         console.log("reciever id= ",receiverSocketId);
         if (receiverSocketId) {
             
             io.to(receiverSocketId).emit("receive_message", {
-                senderId,
+                sender:senderId,
+                receiver:receiverId,
                 content,
-                timestamp: new Date(),
+                createdAt,
+                type,
+                by:"friend"
+               
             });
             console.log(`Message sent to user ${receiverId}`);
+            
         } 
-           else{ console.log(`User ${receiverId} is offline. Message will be saved.`);}
+           
             // Here you can implement logic to save the message to the database
-           /* await Message.create({senderId,receiverId,content,timestamp:new Date()});
-            Message.save();*/ 
+            const newmessage = await Message.create({
+                sender: senderId,
+                receiver: receiverId,
+                content: content.trim(),
+                isRead: false,
+                
+                
+            });
+
+            if (!newmessage) {
+                console.error("Failed to save message to database");
+                return;
+            }
+            console.log("Message saved to database:", newmessage);
         
     });
 

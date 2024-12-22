@@ -1087,28 +1087,81 @@ a {
 
 /* General styling for messages */
 .message {
-    max-width: 40%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+.message-text {
+    max-width: 100%; 
     padding: 0.8rem;
     border-radius: 1rem;
     font-size: 1rem;
+    background-color: var(--border-color);
     word-wrap: break-word;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 /* Received messages */
 .message.received {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     align-self: flex-start; /* Align to the left */
-    background-color: var(--border-color);
+    
     color: var(--text-primary);
     border-top-left-radius: 0;
 }
 
 /* Sent messages */
 .message.sent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     align-self: flex-end; /* Align to the right */
-    background-color: var(--bg-secondary);
+   
     color: var(--text-primary);
     border-top-right-radius: 0;
+}
+
+
+.received-image img{
+    border-radius: 10px;
+    width: 10rem;
+    height: 10rem;
+}
+
+.message.received.image {
+  background-color: var(--bg-primary)
+}
+.message.sent.image {
+  background-color: var(--bg-primary)
+}
+.message-about{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.message.sent .message-about{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.message-timestamp{
+    position: relative;
+    top: 0.7rem;
+    left: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+.message.received .message-about .message-status {
+    display: none !important;
+}
+.message-status{
+    position: relative;
+    top: 0.7rem;
+    left: 0.5rem;
+    color: var(--text-secondary);
+    margin: 0;
 }
 
 
@@ -1116,18 +1169,13 @@ a {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+.selected-image img{
+    position: relative;
+    left: 2rem;
+    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+}
 
 .chatarea-input {
     display: flex; 

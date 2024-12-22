@@ -1,8 +1,8 @@
 import { Message } from "../models/message.js";
-
+import cloudinary from 'cloudinary'
+import fs from 'fs/promises';
 export const getMessages = async (req, res) => {
     try {
-        console.log("inside getmessage");
         const senderId = req.user._id; // Sender ID from authenticated user
         const receiverId = req.params.id; // Receiver ID from route parameter
 
@@ -15,7 +15,7 @@ export const getMessages = async (req, res) => {
         }).sort({ createdAt: 1 }); // Sort messages by creation time (oldest to newest)
 
         if (!messages || messages.length === 0) {
-            return res.status(404).json({ error: "No messages found between these users." });
+            return res.status(204).json({ error: "No messages found between these users." });
         }
 
         return res.status(200).json(messages);
@@ -65,3 +65,56 @@ export const sendmessage = async (req, res) => {
 
 
 
+
+
+
+export const uploadchatimage = async (req, res) => {
+    console.log("inside uploadchatimage");
+if(!req.file ){
+    return res.status(400).json({ message: 'No file uploaded' });
+}
+
+try{
+const result =   
+await cloudinary.v2.uploader.upload(req.file.path, {
+    folder: 'Bondify/Chat-Images',
+    resource_type: 'image',
+    public_id: `chat-image-${Date.now()}`,
+    overwrite: true,
+});
+
+await fs.unlink(req.file.path).catch((err) =>
+  console.error('Failed to delete file:', err)
+);
+
+return res.status(200).json({ message: 'File uploaded successfully',content:result.secure_url});
+}
+catch(err){
+    console.log(err);
+    if (req.file?.path) {
+        await fs.unlink(req.file.path).catch((err) =>
+          console.error('Failed to delete file:', err)
+        );
+    }
+    return res.status(500).json({ message: 'Error uploading file', error: err.message });
+}
+}
+
+
+export const markasread =  async (req, res) => {
+    const { senderId, receiverId } = req.body;
+
+    try {
+        await Message.updateMany(
+            { sender: senderId, receiver: receiverId, isRead: false },
+            { $set: { isRead: true } }
+        );
+        return res.status(200).json({ message: 'Messages marked as read.' });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error updating messages.' });
+    }
+}
+
+/*export const unreadmessages = async (req,res)=>{
+
+}*/

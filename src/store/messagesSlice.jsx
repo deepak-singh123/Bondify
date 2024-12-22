@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const fetchmessages = createAsyncThunk(
     "messages/fetchmessages",
-    async (id) => {
+    async ({id,curruser}) => {
         try {
             // Access the current user
-
-            const response = await fetch(`/messages/getmessages/${id}`, {
+           
+            const response = await fetch(`http://localhost:3000/messages/getmessages/${id}`, {
                 method: "GET",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -16,12 +16,14 @@ const fetchmessages = createAsyncThunk(
 
             const messages = await response.json();
             console.log("messages in slice= ", messages);
-            const processedMessages = messages.data.map((message) => ({
+            console.log("curruser id =",curruser);
+            const processedMessages = messages.map((message) => ({
                 id: message.id,
-                by: message.by,
+                by: message.sender == curruser._id ? "self" : "friend",
                 content: message.content,
                 isRead: message.isRead,
-                timestamp: message.timestamp,
+                createdAt: message.createdAt,
+                type:message.type
             }));
 
             return processedMessages;
@@ -40,6 +42,10 @@ const messagesSlice = createSlice({
             // Add the new message without spreading the current state
             state.push(action.payload);
         },
+        
+          clearMessages: () => {
+            return [];
+          },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchmessages.fulfilled, (state, action) => {
@@ -48,6 +54,6 @@ const messagesSlice = createSlice({
     },
 });
 
-export const { addmessage } = messagesSlice.actions;
+export const { addmessage, clearMessages } = messagesSlice.actions;
 export { fetchmessages };
 export default messagesSlice.reducer;
