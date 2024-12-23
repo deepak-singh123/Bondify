@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -74,6 +75,17 @@ io.on("connection", (socket) => {
         io.emit("online_users", [...onlineUsers.keys()]);
 
     });
+    /**********Alternative***************** */
+   /* socket.on("user_online", (userId) => {
+        onlineUsers.forEach((value, key) => {
+            if (value === socket.id) {
+                onlineUsers.delete(key);
+            }
+        });
+        onlineUsers.set(userId, socket.id);
+        io.emit("online_users", [...onlineUsers.keys()]);
+    });*/
+    
     // User sends a message
 
     socket.on("send_image",async(data)=>{
@@ -156,6 +168,19 @@ io.on("connection", (socket) => {
             console.log("Message saved to database:", newmessage);
         
     });
+
+    socket.on("message_seen", data=>{
+        const { senderId, receiverId } = data;
+        const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("message_seen", {
+                sender:senderId,
+                receiver:receiverId,
+                seen:true
+            });
+        }
+    })
+
 
     // User disconnects
     socket.on("disconnect", () => {

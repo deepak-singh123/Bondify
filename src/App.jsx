@@ -33,7 +33,7 @@ function App() {
 
         socket.on("connect", () => {
             // Emit user_online event whenever the socket reconnects
-            socket.emit("user_online", curruser._id);
+           
             console.log("Reconnected and user_online emitted");
         });
 

@@ -1,20 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
 import Friends from "./friends";
 import Navbar from "../Nav";
 import { IoSend } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 import Badge from "@mui/material/Badge";
-import { FaImage } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa6";
-import { set } from "mongoose";
 import {
   addmessage,
   clearMessages,
   fetchmessages,
 } from "../../../store/messagesSlice";
-import { user } from "../../../../backend/models/user";
 import { socket } from "../../../App";
 import { IoCheckmarkDone } from "react-icons/io5";
+import {
+  fetchunreadcount,
+  settotalcount,
+  setunreadcount,
+} from "../../../store/messagecount";
+import { MdKeyboardBackspace } from "react-icons/md";
 
 const Chatlist = () => {
   const followers = useSelector((store) => store.followersinfo.followers);
@@ -27,17 +31,34 @@ const Chatlist = () => {
   const curruser = useSelector((store) => store.user.user);
   const messages = useSelector((store) => store.messages);
   const [connectionlist, setConnectionList] = useState([]);
+  const [sortedconnectionlist, setsortedconnectionlist] = useState([]);
   const [chatimage, setchatimage] = useState(null);
   let [file, setFile] = useState(null);
-
+  const [triggermessageid, settriggermessage] = useState(null);
   const dispatch = useDispatch();
+  const { unreadcounts, totalmessagecount } = useSelector(
+    (state) => state.messagecount
+  );
+
+  useEffect(() => {
+
+      const sortedList = [...connectionlist].sort((a, b) => {
+      const isOnlineA = onlineusers.includes(a._id) ? 1 : 0;
+      const isOnlineB = onlineusers.includes(b._id) ? 1 : 0;
+
+      // Online users come first
+      return isOnlineB - isOnlineA;
+    });
+
+    setsortedconnectionlist(sortedList);
+  }, [onlineusers, followers, following]);
   const handleimage = (e) => {
     file = e.target.files[0];
     if (!file || file.size > 5 * 1024 * 1024) {
-      // 5MB limit
       alert("File size exceeds the limit of 5MB.");
       return;
     }
+
     if (file) {
       setFile(file);
       const reader = new FileReader();
@@ -50,11 +71,92 @@ const Chatlist = () => {
     }
   };
 
-  const getfrienddetail = (friend, color) => {
-    setchatperson(friend);
+  useEffect( () => {
+    console.log("triggered");
+    if(chatperson && chatperson._id==triggermessageid){
+   const watching = async()=>{ 
+  
+      console.log("current chatperson= ",chatperson.username);
+      try {
+        // Mark messages as read in the backend
+        await fetch("http://localhost:3000/messages/markasread", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            senderId: chatperson._id,
+            receiverId: curruser._id,
+          }),
+        });
+  
+        // Update Redux state for unread counts
+        const updatedUnreadCounts = unreadcounts.filter(
+          (item) => item._id !== chatperson._id
+        ); // Remove friend from unread list
+        const friendUnreadCount =
+          unreadcounts.find((item) => item._id === chatperson._id)?.count || 0;
+        const newTotalUnread = totalmessagecount - friendUnreadCount;
+  
+        // Dispatch updates
+        dispatch(setunreadcount(updatedUnreadCounts)); // Update unread counts grouped by friends
+        dispatch(settotalcount(newTotalUnread)); // Update total unread count
+  
+        // Optionally fetch updated counts from the server
+        dispatch(fetchunreadcount());
 
+    /* socket.emit("message_seen", {
+          senderId: curruser._id,
+          receiverId: chatperson._id,
+        });*/
+
+      } catch (error) {
+        console.error("Error marking messages as read:", error);
+      }}
+    
+    watching();
+    }
+  
+
+  }, [triggermessageid ]);
+
+  socket.on("message_seen", (data) => {
+    dispatch(fetchmessages({ id: data.receiverId, curruser: data.senderId }));
+  });
+
+  const getfrienddetail = async (friend, color) => {
+    setchatperson(friend);
     setactive("active");
     setcolor(color);
+
+    try {
+      // Mark messages as read in the backend
+      await fetch("http://localhost:3000/messages/markasread", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          senderId: friend._id,
+          receiverId: curruser._id,
+        }),
+      });
+
+      // Update Redux state for unread counts
+      const updatedUnreadCounts = unreadcounts.filter(
+        (item) => item._id !== friend._id
+      ); // Remove friend from unread list
+      const friendUnreadCount =
+        unreadcounts.find((item) => item._id === friend._id)?.count || 0;
+      const newTotalUnread = totalmessagecount - friendUnreadCount;
+
+      // Dispatch updates
+      dispatch(setunreadcount(updatedUnreadCounts)); // Update unread counts grouped by friends
+      dispatch(settotalcount(newTotalUnread)); // Update total unread count
+
+      // Optionally fetch updated counts from the server
+      dispatch(fetchunreadcount());
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
+    }
   };
 
   const handlemessage = (e) => {
@@ -77,11 +179,10 @@ const Chatlist = () => {
     socket.on("online_users", (users) => {
       setonlineusers(users);
     });
-  }, []); // Empty dependency array to run only on mount
-  console.log("messsage = ", messages);
+  }, [curruser._id, followers, following]);
+
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      console.log("received message= ", data);
       const by = data.senderId === curruser._id ? "self" : "friend";
       const newMessage = {
         senderId: data.senderId,
@@ -99,6 +200,7 @@ const Chatlist = () => {
 
       if (!messageExists) {
         dispatch(addmessage(newMessage));
+        settriggermessage(data.senderId);
       }
     });
 
@@ -121,12 +223,14 @@ const Chatlist = () => {
 
       if (!messageExists) {
         dispatch(addmessage(newMessage));
+        settriggermessage(triggermessageid);
       }
     });
 
     return () => {
       socket.off("receive_message");
-      socket.off("receive_image");
+    socket.off("receive_image");
+    socket.off("message_seen");
     };
   }, [dispatch, messages, curruser._id]);
 
@@ -219,7 +323,7 @@ const Chatlist = () => {
         <div className="messages">
           <div className="suggestions-list friends-list">
             <h1>Chat</h1>
-            {connectionlist.map((friend) => (
+            {sortedconnectionlist.map((friend) => (
               <Friends
                 onlineusers={onlineusers}
                 key={friend._id}
@@ -231,6 +335,10 @@ const Chatlist = () => {
           <div className={`chatarea ${active}`}>
             {chatperson && (
               <div className="chatarea-header">
+               <div className="backbtn">
+                <MdKeyboardBackspace size={30} onClick={() => setactive(" ")}/>
+
+              </div>
                 <div className="follower-card header">
                   <div className="follower-info">
                     <Badge
@@ -259,25 +367,27 @@ const Chatlist = () => {
                   messages.map((msg, index) => (
                     <div
                       key={index}
-                      className={`message ${
-                        msg.by === "self" ? "sent" : "received"
-                      } ${msg.type === "text" ? " " : "image"}`}
+                      className={`message ${msg.by === "self" ? "sent" : "received"
+                        } ${msg.type === "text" ? " " : "image"}`}
                     >
                       {msg.type === "text" ? (
                         <>
                           <div className="message-text">{msg.content}</div>
-                        <div className="message-about">  <div className="message-timestamp">
-                            {new Date(msg.createdAt).toLocaleString("en-US", {
-                              hour: "numeric",
-                              minute: "numeric",
-                              hour12: true, // For 12-hour format with AM/PM
-                            })}
+                          <div className="message-about">
+                            {" "}
+                            <div className="message-timestamp">
+                              {new Date(msg.createdAt).toLocaleString("en-US", {
+                                hour: "numeric",
+                                minute: "numeric",
+                                hour12: true, // For 12-hour format with AM/PM
+                              })}
+                            </div>
+                            <div className="message-status">
+                              <IoCheckmarkDone
+                                color={msg.isRead ? "cyan" : "defaultColor"}
+                              />
+                            </div>
                           </div>
-
-                          <div className="message-status">
-                        <IoCheckmarkDone color="cyan" />
-                      </div>
-                        </div>
                         </>
                       ) : (
                         <>
@@ -288,22 +398,23 @@ const Chatlist = () => {
                               className="received-image"
                             />
                           </div>{" "}
-                          <div className="message-about"> <div className="message-timestamp">
-                            {new Date(msg.createdAt).toLocaleString("en-US", {
-                              hour: "numeric",
-                              minute: "numeric",
-                              hour12: true, // For 12-hour format with AM/PM
-                            })}
+                          <div className="message-about">
+                            {" "}
+                            <div className="message-timestamp">
+                              {new Date(msg.createdAt).toLocaleString("en-US", {
+                                hour: "numeric",
+                                minute: "numeric",
+                                hour12: true, // For 12-hour format with AM/PM
+                              })}
+                            </div>
+                            <div className="message-status">
+                              <IoCheckmarkDone
+                                color={msg.isRead ? "cyan" : "defaultColor"}
+                              />
+                            </div>
                           </div>
-
-                          <div className="message-status">
-                        <IoCheckmarkDone color="cyan" />
-                      </div>
-
-                      </div>
                         </>
                       )}
-                     
                     </div>
                   ))}
                 <div ref={messagesEndRef} />

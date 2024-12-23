@@ -1,8 +1,13 @@
+/* eslint-disable react/prop-types */
 import Badge from "@mui/material/Badge";
 import { MdMessage } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const Friends = ({ friend, getfrienddetail,onlineusers }) => {
   const color=onlineusers.includes(friend._id)?"success":"error";
+  const unreadcounts = useSelector((store)=>store.messagecount.unreadcounts);
+  
+  const count = unreadcounts.find(item => item._id === friend._id)?.count || null;
   return (
     <>
       <div
@@ -22,7 +27,7 @@ const Friends = ({ friend, getfrienddetail,onlineusers }) => {
           <img src={friend.profilePicture} alt={friend.username} />
           <h2 className="username">{friend.username}</h2>
         </div>
-        <Badge badgeContent={2} color="primary">
+        <Badge badgeContent={count} color="error"  >
           <div className="chat-notification">
             <MdMessage />
           </div>

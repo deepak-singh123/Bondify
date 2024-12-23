@@ -7,7 +7,6 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
 import cors from "cors"
 import uploadprofile from "../controllers/uploadprofile.js";
-import multer from "multer";
 import upload from "../middlware/multer.js";
 import isLoggedin from "../controllers/isLoggedin.js";
 

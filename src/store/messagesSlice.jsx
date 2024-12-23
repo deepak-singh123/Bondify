@@ -15,8 +15,7 @@ const fetchmessages = createAsyncThunk(
             if (!response.ok) throw new Error("Failed to fetch messages");
 
             const messages = await response.json();
-            console.log("messages in slice= ", messages);
-            console.log("curruser id =",curruser);
+       
             const processedMessages = messages.map((message) => ({
                 id: message.id,
                 by: message.sender == curruser._id ? "self" : "friend",

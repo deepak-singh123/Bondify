@@ -12,6 +12,7 @@ import Sidebar from "./Sidebar";
 import Searchbar from "./searchbar";
 import Badge from '@mui/material/Badge';
 import { socket } from "../../App";
+import { fetchunreadcount } from "../../store/messagecount";
 
 
 
@@ -33,6 +34,13 @@ const Navbar=()=>{
     const searchRef = useRef(null);
     const searchresultRef = useRef(null);
     const themeRef = useRef(null);
+    const totalunread = useSelector((store)=>store.messagecount.totalmessagecount);
+    
+    useEffect(() => {
+        dispatch(fetchunreadcount());
+
+
+    }, [dispatch,totalunread]);
 
 
 
@@ -108,7 +116,8 @@ const Navbar=()=>{
                     {isDarkMode ? <BsSun /> : <BsMoonStars />}
                 </button>
                 <MdPeopleAlt />
-                <Badge badgeContent={2} color="primary">
+                <Badge badgeContent={totalunread || null } color="primary">
+
                 <Link to="/chat"><MdMessage /></Link>  
     </Badge>
                 <IoIosNotifications />
