@@ -172,8 +172,10 @@ io.on("connection", (socket) => {
     socket.on("message_seen", data=>{
         const { senderId, receiverId } = data;
         const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
+        
         if (receiverSocketId) {
-            io.to(receiverSocketId).emit("message_seen", {
+            console.log("emitting to message_response");
+            io.to(receiverSocketId).emit("message_response", {
                 sender:senderId,
                 receiver:receiverId,
                 seen:true

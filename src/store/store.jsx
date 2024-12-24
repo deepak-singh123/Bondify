@@ -11,6 +11,8 @@ import isFollowingReducer from "./isFollowingSlice";
 import alluserReducer from "./alluserSlice";
 import messagesReducer from "./messagesSlice";
 import messagecountReducer from "./messagecount";
+import postlikeReducer from "./postlikeSlice";
+import commentReducer from "./commentSlice";
 export const store = configureStore({
     reducer: {
         user: userReducer,
@@ -24,5 +26,8 @@ export const store = configureStore({
         isFollowing: isFollowingReducer,
         alluser: alluserReducer,
         messages: messagesReducer,
-        messagecount: messagecountReducer    }
+        messagecount: messagecountReducer,
+        postlike:postlikeReducer,
+        comment:commentReducer
+    },  
 });

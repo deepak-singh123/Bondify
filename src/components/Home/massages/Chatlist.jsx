@@ -71,57 +71,50 @@ const Chatlist = () => {
     }
   };
 
-  useEffect( () => {
-    console.log("triggered");
-    if(chatperson && chatperson._id==triggermessageid){
-   const watching = async()=>{ 
-  
-      console.log("current chatperson= ",chatperson.username);
-      try {
-        // Mark messages as read in the backend
-        await fetch("http://localhost:3000/messages/markasread", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            senderId: chatperson._id,
-            receiverId: curruser._id,
-          }),
-        });
-  
-        // Update Redux state for unread counts
-        const updatedUnreadCounts = unreadcounts.filter(
-          (item) => item._id !== chatperson._id
-        ); // Remove friend from unread list
-        const friendUnreadCount =
-          unreadcounts.find((item) => item._id === chatperson._id)?.count || 0;
-        const newTotalUnread = totalmessagecount - friendUnreadCount;
-  
-        // Dispatch updates
-        dispatch(setunreadcount(updatedUnreadCounts)); // Update unread counts grouped by friends
-        dispatch(settotalcount(newTotalUnread)); // Update total unread count
-  
-        // Optionally fetch updated counts from the server
-        dispatch(fetchunreadcount());
+/*
+useEffect(() => {
 
-    /* socket.emit("message_seen", {
+    if (chatperson && triggermessageid && chatperson._id == triggermessageid) {
+      console.log("Messages marked as read for:", chatperson.username);
+
+      try {
+      
+  
+        socket.emit("message_seen", {
           senderId: curruser._id,
           receiverId: chatperson._id,
-        });*/
+        });
 
+        console.log("Message seen notification sent to server.");
       } catch (error) {
         console.error("Error marking messages as read:", error);
-      }}
-    
-    watching();
+      }
     }
   
 
-  }, [triggermessageid ]);
+}, [chatperson, triggermessageid]); // Trigger when chatperson or triggermessageid changes*/
 
-  socket.on("message_seen", (data) => {
-    dispatch(fetchmessages({ id: data.receiverId, curruser: data.senderId }));
-  });
+/*
+useEffect(() => {
+  const handleMessageResponse = (data) => {
+    console.log("reciever-tan -data",data);
+    if (data.receiver && data.sender) {
+      console.log("inside message_response event with valid data:", data);
+      dispatch(fetchmessages({ id: data.sender, curruser: data.receiver }));
+    } else {
+      console.error("Invalid data in message_response event:", data);
+    }
+  };
+
+  // Register the socket listener
+  socket.on("message_response", handleMessageResponse);
+
+  // Cleanup to avoid multiple registrations
+  return () => {
+    socket.off("message_response", handleMessageResponse);
+  };
+}, [dispatch]); // Only run when `dispatch` changes*/
+
 
   const getfrienddetail = async (friend, color) => {
     setchatperson(friend);
@@ -183,7 +176,7 @@ const Chatlist = () => {
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      const by = data.senderId === curruser._id ? "self" : "friend";
+      const by = data.sender === curruser._id ? "self" : "friend";
       const newMessage = {
         senderId: data.senderId,
         by: by,
@@ -199,16 +192,17 @@ const Chatlist = () => {
       );
 
       if (!messageExists) {
+
         dispatch(addmessage(newMessage));
-        settriggermessage(data.senderId);
+        settriggermessage(data.sender);
       }
     });
 
     socket.on("receive_image", (data) => {
       console.log("received image= ", data);
-      const by = data.senderId === curruser._id ? "self" : "friend";
+      const by = data.sender === curruser._id ? "self" : "friend";
       const newMessage = {
-        senderId: data.senderId,
+        senderId: data.sender,
         by: by,
         content: data.content,
         createdAt: data.createdAt,
@@ -222,8 +216,9 @@ const Chatlist = () => {
       );
 
       if (!messageExists) {
+        console.log("setting triggermessage as ",data.sender);
         dispatch(addmessage(newMessage));
-        settriggermessage(triggermessageid);
+        settriggermessage(data.sender);
       }
     });
 
@@ -274,7 +269,6 @@ const Chatlist = () => {
         console.log(err);
       }
     } else if (message.trim()) {
-      console.log("inside message");
       const newMessage = {
         senderId: curruser._id,
         by: "self",
@@ -440,10 +434,16 @@ const Chatlist = () => {
                 onChange={(e) => {
                   handlemessage(e);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) { // Ensure Enter is pressed without Shift
+                    e.preventDefault(); // Prevent default behavior (e.g., adding a newline)
+                    handlesendmessage(); // Call the message send function
+                  }
+                }}
                 className="chatarea-chat-input"
                 placeholder="Type a message"
               />
-              <button onClick={handlesendmessage}>
+              <button onClick={handlesendmessage}  >
                 <IoSend />
               </button>
             </div>

@@ -359,6 +359,9 @@ body {
 }
 
 .post-input::placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding-top: 10px;
     color: var(--text-secondary);
 }
@@ -636,6 +639,39 @@ body {
     font-size: 0.9rem;
 }
 
+.far.fa-heart.liked{
+    color:red;
+}
+.comment-container{
+    width: 100% ;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 10px;
+}
+.post-header.comment{
+   margin:1rem;
+   width: 90% !important;
+       
+}
+
+/**************POST-COMMENT**************/
+.usercomment{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 10px;
+}
 
 /********************Person Profile*******************/
 .infopage{
