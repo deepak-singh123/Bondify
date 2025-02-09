@@ -312,10 +312,10 @@ useEffect(() => {
 
   return (
     <>
-      <div className="messages-container">
+      <div className={`messages-container ${active}`}>
         <Navbar />
         <div className="messages">
-          <div className="suggestions-list friends-list">
+          <div className={`suggestions-list friends-list ${active}`}>
             <h1>Chat</h1>
             {sortedconnectionlist.map((friend) => (
               <Friends
@@ -435,9 +435,9 @@ useEffect(() => {
                   handlemessage(e);
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) { // Ensure Enter is pressed without Shift
-                    e.preventDefault(); // Prevent default behavior (e.g., adding a newline)
-                    handlesendmessage(); // Call the message send function
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handlesendmessage(); 
                   }
                 }}
                 className="chatarea-chat-input"

@@ -650,7 +650,6 @@ body {
     justify-content: center;
     flex-direction: column;
     margin-top: 1rem;
-    background-color: var(--bg-tertiary);
     border-radius: 10px;
 }
 .post-header.comment{
@@ -661,18 +660,61 @@ body {
 
 /**************POST-COMMENT**************/
 .usercomment{
-    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
     height: 100%;
+    
+}
+.usercomment-container{
+    display: flex;
+    align-items:center;
+    justify-content: flex-start;
+    width: 100%;
+    max-height: fit-content;
+    margin-top: 1rem;
+    border-radius: 10px;
+}
+.usercomment-container img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+    border: 1px solid var(--text-primary);
+}
+.usercomment-binder{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    gap: 1rem;
+    align-items: flex-start;
+}
+.usercomment-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    width: 100%;
+    height: 100%;
+    margin-right: 1rem;
+    background-color: var(--border-color);
+    border-radius: 15px;
     padding: 1rem;
-    background-color: var(--bg-tertiary);
-    border-radius: 10px;
+    width: fit-content;
+    height: 4rem;
+    max-height: fit-content;
+    display: flex;
+    flex-direction: column;
 }
 
+.usercomment-time{
+    
+    font-size: .8rem;
+    padding: .2rem 0 0 .6rem;
+    
+}
 /********************Person Profile*******************/
 .infopage{
     display: flex;
@@ -1285,6 +1327,7 @@ color: var(--text-primary)
 @media (max-width: 768px) {
     .connectionslists {
         padding: 15px;
+        display: none;
     }
 
     .follower-card {
@@ -1296,6 +1339,19 @@ color: var(--text-primary)
     .follow-button {
         align-self: flex-end;
     }
+    .mainuser{
+        display: none;
+    }
+
+    .connectionslists-container{
+        display: none;
+    }
+
+    .postlist-container{
+        margin-top:  0 !important;;
+    }
+
+
 }
 
 
@@ -1326,9 +1382,20 @@ color: var(--text-primary)
 
 @media screen and (max-width: 480px) {
     .search-bar input {
-        width: 8rem;
+        width: 4rem;
     }
-
+    .navbar-logo{
+        height: 2rem;
+        width: 2rem;
+        overflow: hidden;
+    }
+    .navbar-logo a{
+        height: 2rem;
+        width: .1rem;
+    }
+    .search-bar{
+        width: 6.5rem;
+    }
     .navbar-right {
         gap: 0.5rem;
     }
@@ -1338,6 +1405,7 @@ color: var(--text-primary)
         width: 100%;
         padding: 1rem;
         top: 3.75rem;
+        margin-bottom: 0;
     }
 
     .postlist-container {
@@ -1350,4 +1418,44 @@ color: var(--text-primary)
         border-radius: 0;
         margin: 0.5rem 0;
     }
+    .messages-container{
+        width: 100%;
+    }
+    .navbar{
+        width: 100%;
+        justify-content: space-evenly;
+        gap: 2rem;
+    }
+    
+    .messages-container .sidebar{
+        top: 6%;
+    }
+    .messages-container.active .navbar{
+        display: none;
+    }
+    .messages-container.active .messages{
+        padding: 0;
+    }
+    .suggestions-list{
+        left: 0!important;
+        border-radius: 0!important;
+        height: 100%!important;
+        width: 100vw!important;
+    }
+    .suggestions-list.active{
+        display: none;
+    }
+    .chatarea{
+        display: none;
+    }
+    .chatarea.active{
+        display: block;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        left: 0!important;
+        border-radius: 0!important;
+    }
+
+    
 }

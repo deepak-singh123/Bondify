@@ -3,11 +3,11 @@ import { Post } from "../models/post.js";
 
 export const postcomment  =async(req,res)=>{
     console.log("inside postcomment");
-
+    console.log("req=",req.body.comment);
     const curruser = req.user;
     const postid = req.params.id;
-    const comment = req.body.content;
-    console.log(comment);
+    const comment = req.body.comment;
+    
     try{
         const post = await Post.findById(postid);
 
@@ -41,7 +41,7 @@ export const getcomments = async(req,res)=>{
         if(!post){
             return res.status(404).json({message:"Post not found"});
         }
-
+        console.log(post.comments);
         res.status(200).json(post.comments);
     }catch(error){
         res.status(500).json({message:error.message});

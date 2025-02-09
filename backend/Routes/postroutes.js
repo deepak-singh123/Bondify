@@ -21,6 +21,6 @@ postroutes.post("/create",upload.single('postimage'),isauthenticated,uploadpost)
 postroutes.post("/delete/:id",isauthenticated,deletepost);
 postroutes.get("/allposts",isauthenticated,allposts);
 postroutes.post("/likepost/:id",isauthenticated,likepost);
-postroutes.post("/comment/:id",isauthenticated,postcomment);
+postroutes.post("/comment/:id",upload.none(),isauthenticated,postcomment);
 postroutes.get("/getcomments/:id",isauthenticated,getcomments);
 export default postroutes

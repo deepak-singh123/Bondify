@@ -115,7 +115,6 @@ const Navbar=()=>{
                 <button    className="theme-toggle" onClick={handleThemeToggle}>
                     {isDarkMode ? <BsSun /> : <BsMoonStars />}
                 </button>
-                <MdPeopleAlt />
                 <Badge badgeContent={totalunread || null } color="primary">
 
                 <Link to="/chat"><MdMessage /></Link>  

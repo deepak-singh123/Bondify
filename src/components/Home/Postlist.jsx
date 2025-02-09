@@ -35,7 +35,6 @@ const Postlist = () => {
                     setLoadingMore(true);
                     dispatch(fetchuserposts({ lastCreatedAt: lastPost.createdAt }))
                         .unwrap()
-                        .then(response => console.log('Fetched more posts:', response))
                         .catch(err => console.error('Error fetching more posts:', err))
                         .finally(() => setLoadingMore(false));
                 } else {

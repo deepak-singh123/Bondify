@@ -34,7 +34,7 @@ const commentSlice = createSlice({
     },
     reducers: {
         setComment: (state, action) => {
-            state.push(action.payload);
+            state.comments.push(action.payload);
         },
     },
     extraReducers:(builder)=>{
