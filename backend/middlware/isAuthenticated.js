@@ -15,6 +15,7 @@ app.use(cors({
 }));
 
 export const isauthenticated = async (req, res, next) => {
+    console.log("In authenticated  the body is",req.body);
     try {
 
         const { authToken } = req.cookies;
