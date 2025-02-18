@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: ["http://localhost:5174", "https://bondifyy.netlify.app"],
+    origin: ["http://localhost:5173", "https://bondifyy.netlify.app"],
     credentials: true,
 }));
 
@@ -22,7 +22,7 @@ export const isauthenticated = async (req, res, next) => {
             return res.status(401).json({ message: "Authentication failed. No token provided." });
         }
 
-        const decoded = jwt.verify(authToken, process.env.SECRET_KEY);
+        const decoded = await jwt.verify(authToken, process.env.SECRET_KEY);
 
          req.user = await user.findById(decoded._id);
 
