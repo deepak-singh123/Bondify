@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { toggleTheme } from "../../store/themeSlice";
 import Sidebar from "./Sidebar";
-import Searchbar from "./searchbar";
+import Searchbar from "./Searchbar";
 import Badge from '@mui/material/Badge';
 import { socket } from "../../App";
 import { fetchunreadcount } from "../../store/messagecount";
