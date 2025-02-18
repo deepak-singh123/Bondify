@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
-import Friends from "./friends";
+import Friends from "./Friends";
 import Navbar from "../Nav";
 import { IoSend } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
