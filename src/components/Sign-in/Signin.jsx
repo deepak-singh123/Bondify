@@ -44,7 +44,7 @@ const Signin = () => {
     const route = currentPath === "/register" ? "register" : "login";
 
     try {
-      const response = await fetch(`/auth/${route}`, {
+      const response = await fetch(`https://bondify-1lzw.onrender.com/auth/${route}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: 'include',  // Important for setting cookies
