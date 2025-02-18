@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Usercomments from "./usercomments";
+import Usercomments from "./Usercomments";
 import { fetchcomments, setComment } from "../../../store/commentSlice";
 
 export const Comment = ({ post }) => {
