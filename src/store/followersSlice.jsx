@@ -30,7 +30,7 @@ export   const handlefollow=async(followid,following,dispatch)=>{
             
         }
         else{
-            const response =  await fetch(`https://bondify-1lzw.onrender.com/user/connections/${followid}/follow`,{
+            const response =  await fetch(`/user/connections/${followid}/follow`,{
                 method:"POST",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}

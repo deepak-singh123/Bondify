@@ -5,7 +5,7 @@ export const fetchSearchResults = createAsyncThunk(
     async (query) => {
         try{
             if(query.trim().length > 1){
-        const response = await fetch(`https://bondify-1lzw.onrender.com/user/search?q=${query}`,{
+        const response = await fetch(`/user/search?q=${query}`,{
             method:"GET",
             credentials: 'include',
             headers: {'Content-Type': 'application/json'}

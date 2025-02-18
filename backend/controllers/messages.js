@@ -118,7 +118,7 @@ export const markasread =  async (req, res) => {
 
 export const unreadmessages = async (req,res)=>{
         const  userId = req.user._id;
-
+        console.log("userid inside unread= ",userId);
         try {
             // Total unread messages for the user
             const totalUnread = await Message.countDocuments({
