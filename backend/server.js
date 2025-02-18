@@ -57,7 +57,7 @@ const httpServer = createServer(app);
 // Initialize Socket.IO
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:5173", // Allow requests from your frontend
+        origin: "https://bondifyy.netlify.app", // Allow requests from your frontend
         credentials: true,
     },
 });
