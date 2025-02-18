@@ -16,7 +16,12 @@ app.use(cors({
 
 export const isauthenticated = async (req, res, next) => {
     try {
-
+        if(req.cookies!==undefined){
+            console.log("Authentication passed");
+        }
+        else{
+            console.log("Authentication failed. No token provided.");
+        }
         const { authToken } = req.cookies;
         if (!authToken) {
             return res.status(401).json({ message: "Authentication failed. No token provided." });

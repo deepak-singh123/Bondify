@@ -32,7 +32,7 @@ export const userlogin = async (req, res) => {
 
         const payload = { _id: founduser._id, email: founduser.email };
         const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "10h" });
-
+console.log("process.env.NODE_ENV= ",process.env.NODE_ENV);
         res.cookie("authToken", token, {
             httpOnly: true,
             maxAge: 3600000 * 5, // 5 hours
