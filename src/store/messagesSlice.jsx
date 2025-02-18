@@ -7,7 +7,7 @@ const fetchmessages = createAsyncThunk(
             // Access the current user
             const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-            const response = await fetch(`${API_BASE_URL}/messages/getmessages/${id}`, {
+            const response = await fetch(`/messages/getmessages/${id}`, {
                 method: "GET",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

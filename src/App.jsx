@@ -9,8 +9,9 @@ import { fetchfollowinginfo } from './store/followingSlice';
 import { fetchfollowersinfo } from './store/followersSlice';
 import { fetchuserinfo } from './store/userinfoSlice';
 import { fetchAllUser } from './store/alluserSlice';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-const SOCKET_SERVER_URL = "https://bondify-1lzw.onrender.com";
+const SOCKET_SERVER_URL = `${API_BASE_URL}`;
 
 // Socket instance (can be reinitialized)
 export let socket;
