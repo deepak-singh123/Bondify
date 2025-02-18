@@ -12,6 +12,7 @@ import { fetchcomments } from '../../store/commentSlice';
 import { Comment } from './comment/Comment';
 
 const Post = ({ post }) => {
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
     const [showMenu, setShowMenu] = React.useState(false);
     const [isFollowing, setIsFollowing] = React.useState("Follow");
     const curruser = useSelector((store) => store.user.user);
@@ -57,7 +58,7 @@ const Post = ({ post }) => {
 
     const handledelete = async (postid) => {
         try {
-            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/delete/${postid}`, {
+            const response = await fetch(`/user/post/delete/${postid}`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {

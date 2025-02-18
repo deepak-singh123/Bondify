@@ -4,6 +4,7 @@ import Usercomments from "./Usercomments";
 import { fetchcomments, setComment } from "../../../store/commentSlice";
 
 export const Comment = ({ post }) => {
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
     const curruser = useSelector((state) => state.user.user);
     const textAreaRef = useRef(null);
     const [commentText, setCommentText] = useState('');
@@ -33,7 +34,7 @@ export const Comment = ({ post }) => {
         }
 
         try {
-            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/comment/${post._id}`, {
+            const response = await fetch(`/user/post/comment/${post._id}`, {
                 method: "POST",
                 credentials: "include",
                 body: formdata,

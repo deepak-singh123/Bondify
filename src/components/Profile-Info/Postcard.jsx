@@ -33,7 +33,7 @@ const Postcard = ({post,curruser})=>{
     console.log(post);
     const handledelete = async (postid) => {
         try {
-            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/delete/${postid}`, {
+            const response = await fetch(`/user/post/delete/${postid}`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {

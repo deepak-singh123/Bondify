@@ -38,7 +38,7 @@ const ProfileUpload=()=>{
       
         try {
           setuploading("Uploading...");
-          const response = await fetch('https://bondify-1lzw.onrender.com/auth/api/user/profile', {
+          const response = await fetch('/auth/api/user/profile', {
             method: 'POST',
             body: formdata 
           });

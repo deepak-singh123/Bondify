@@ -6,6 +6,7 @@ import { BsEmojiSmile } from 'react-icons/bs';
 import './Home.css';
 
 const Createpost = () => {
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
     const [postText, setPostText] = useState('');
     var [file, setfile] = useState(null);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -92,7 +93,7 @@ const Createpost = () => {
         }
 
         try {
-            const response = await fetch('https://bondify-1lzw.onrender.com/user/post/create', {
+            const response = await fetch(`/user/post/create`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formdata

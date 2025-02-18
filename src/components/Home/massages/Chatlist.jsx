@@ -21,6 +21,8 @@ import {
 import { MdKeyboardBackspace } from "react-icons/md";
 
 const Chatlist = () => {
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
   const followers = useSelector((store) => store.followersinfo.followers);
   const following = useSelector((store) => store.followinginfo.following);
   const [chatperson, setchatperson] = useState(null);
@@ -79,7 +81,7 @@ const Chatlist = () => {
 
     try {
       // Mark messages as read in the backend
-      await fetch("https://bondify-1lzw.onrender.com/messages/markasread", {
+      await fetch(`${API_BASE_URL}/messages/markasread`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Async thunk for fetching unread message counts
 const fetchunreadcount = createAsyncThunk(
     'messagecount/fetchunreadcount',
     async () => {
         try {
-            const response = await fetch(`https://bondify-1lzw.onrender.com/messages/unread`, {
+            const response = await fetch(`${API_BASE_URL}/messages/unread`, {
                 method: "GET",
                 credentials: 'include',
             });

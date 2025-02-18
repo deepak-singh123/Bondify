@@ -5,8 +5,9 @@ const fetchmessages = createAsyncThunk(
     async ({id,curruser}) => {
         try {
             // Access the current user
-           
-            const response = await fetch(`https://bondify-1lzw.onrender.com/messages/getmessages/${id}`, {
+            const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+            const response = await fetch(`${API_BASE_URL}/messages/getmessages/${id}`, {
                 method: "GET",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

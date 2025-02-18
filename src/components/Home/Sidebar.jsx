@@ -17,7 +17,7 @@ const Sidebar = ({currclass, sidebarRef}) => {
 
     const handleLogout = async() => {
         try {
-            const response = await fetch('https://bondify-1lzw.onrender.com/auth/logout', {
+            const response = await fetch('/auth/logout', {
                 method: 'POST',
                 credentials: 'include',
             });
