@@ -23,6 +23,6 @@ const authroutes =  express.Router();
 authroutes.post("/register",registeruser);
 authroutes.post("/login",userlogin);
 authroutes.post("/logout",isauthenticated,authlogout);
-authroutes.get("/isloggedin",isauthenticated,isLoggedin);
+authroutes.post("/isloggedin",isauthenticated,isLoggedin);
 authroutes.post("/api/user/profile",upload.single('profilePhoto'),isauthenticated,uploadprofile);
 export default authroutes;
