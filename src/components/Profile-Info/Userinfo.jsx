@@ -30,9 +30,13 @@ const  Userinfo = ()=>{
     return(
         <>
            <div className="userinfo-card">
-            <img src={person.profilePicture} alt={person.username} className="profile-picture" />
-            <h2 className="username">{person.username}</h2>
+            
+            <div className="user-about"><img src={person.profilePicture} alt={person.username} className="profile-picture" />
+            <h2 className="username">{person.username}</h2></div>
+            <div className="ui-user-details">
             <div className="userinfo-bio">"{person.bio}"</div>
+            
+
             <div className="Profile-buttons">
                 <button onClick={handleFollowClick} className="follow-button">{isFollowing}</button>
                 <button className="message-button">Message</button>
@@ -51,7 +55,7 @@ const  Userinfo = ()=>{
                     <span className="stat-label">Posts</span>
                 </div>
             </div>
-          
+            </div>
         </div>
 
         
