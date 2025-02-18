@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { handlefollow } from "../../store/followersSlice";
-import Connection from "./connection";
+import Connection from "./Connection";
 import { useEffect, useState } from "react";
 
 
