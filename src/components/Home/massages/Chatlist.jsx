@@ -71,50 +71,6 @@ const Chatlist = () => {
     }
   };
 
-/*
-useEffect(() => {
-
-    if (chatperson && triggermessageid && chatperson._id == triggermessageid) {
-      console.log("Messages marked as read for:", chatperson.username);
-
-      try {
-      
-  
-        socket.emit("message_seen", {
-          senderId: curruser._id,
-          receiverId: chatperson._id,
-        });
-
-        console.log("Message seen notification sent to server.");
-      } catch (error) {
-        console.error("Error marking messages as read:", error);
-      }
-    }
-  
-
-}, [chatperson, triggermessageid]); // Trigger when chatperson or triggermessageid changes*/
-
-/*
-useEffect(() => {
-  const handleMessageResponse = (data) => {
-    console.log("reciever-tan -data",data);
-    if (data.receiver && data.sender) {
-      console.log("inside message_response event with valid data:", data);
-      dispatch(fetchmessages({ id: data.sender, curruser: data.receiver }));
-    } else {
-      console.error("Invalid data in message_response event:", data);
-    }
-  };
-
-  // Register the socket listener
-  socket.on("message_response", handleMessageResponse);
-
-  // Cleanup to avoid multiple registrations
-  return () => {
-    socket.off("message_response", handleMessageResponse);
-  };
-}, [dispatch]); // Only run when `dispatch` changes*/
-
 
   const getfrienddetail = async (friend, color) => {
     setchatperson(friend);

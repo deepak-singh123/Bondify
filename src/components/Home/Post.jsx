@@ -8,8 +8,8 @@ import { handlefollow } from '../../store/followersSlice';
 import { handleResultClick } from '../../store/userinfoSlice';
 import { useNavigate } from 'react-router-dom';
 import { setPostLike } from '../../store/postlikeSlice';
-import { Comment } from './comment/comment';
 import { fetchcomments } from '../../store/commentSlice';
+import { Comment } from './comment/Comment';
 
 const Post = ({ post }) => {
     const [showMenu, setShowMenu] = React.useState(false);
