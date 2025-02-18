@@ -15,7 +15,7 @@ export const fetchuserposts = createAsyncThunk(
     const { lastCreatedAt = null, limit = 5 } = args || {}; // Add fallback for args
     try {
       const response = await fetch(
-        `/user/post/allposts?lastCreatedAt=${lastCreatedAt}&limit=${limit}`,
+        `https://bondify-1lzw.onrender.com/user/post/allposts?lastCreatedAt=${lastCreatedAt}&limit=${limit}`,
         {
           method: "GET",
           credentials: "include",

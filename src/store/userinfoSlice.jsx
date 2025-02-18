@@ -22,7 +22,7 @@ export const fetchuserinfo  = createAsyncThunk(
     'userinfo/fetchuserinfo',
     async (id) => {
         try {
-            const response = await fetch(`/user/${id}/info`, {
+            const response = await fetch(`https://bondify-1lzw.onrender.com/user/${id}/info`, {
                 method: "GET",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}
