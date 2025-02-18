@@ -9,7 +9,7 @@ export const fetchUserData = createAsyncThunk(
     'user/fetchUserData',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch("/auth/isloggedin", {
+            const response = await fetch("https://bondify-1lzw.onrender.com/auth/isloggedin", {
                 method: "POST",
                 credentials: 'include',
                 headers: {
