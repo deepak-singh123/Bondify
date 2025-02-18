@@ -33,7 +33,7 @@ export const Comment = ({ post }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/user/post/comment/${post._id}`, {
+            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/comment/${post._id}`, {
                 method: "POST",
                 credentials: "include",
                 body: formdata,

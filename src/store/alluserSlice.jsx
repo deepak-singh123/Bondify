@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const fetchAllUser = createAsyncThunk(
     'alluser/fetchAllUser',
     async () => {
-      const response = await fetch("http://localhost:3000/user/allusers", {
+      const response = await fetch("https://bondify-1lzw.onrender.com/user/allusers", {
         method: "GET",
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

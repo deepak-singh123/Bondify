@@ -5,7 +5,7 @@ const fetchunreadcount = createAsyncThunk(
     'messagecount/fetchunreadcount',
     async () => {
         try {
-            const response = await fetch(`http://localhost:3000/messages/unread`, {
+            const response = await fetch(`https://bondify-1lzw.onrender.com/messages/unread`, {
                 method: "GET",
                 credentials: 'include',
             });

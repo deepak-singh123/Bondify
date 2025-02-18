@@ -6,7 +6,7 @@ const fetchmessages = createAsyncThunk(
         try {
             // Access the current user
            
-            const response = await fetch(`http://localhost:3000/messages/getmessages/${id}`, {
+            const response = await fetch(`https://bondify-1lzw.onrender.com/messages/getmessages/${id}`, {
                 method: "GET",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

@@ -10,7 +10,7 @@ export const fetchcomments = createAsyncThunk(
     'comment/fetchcomments',
     async(id)=>{
         try{
-            const response = await fetch(`http://localhost:3000/user/post/getcomments/${id}`,{
+            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/getcomments/${id}`,{
                 method:"GET",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}

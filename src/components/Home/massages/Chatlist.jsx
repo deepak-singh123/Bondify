@@ -123,7 +123,7 @@ useEffect(() => {
 
     try {
       // Mark messages as read in the backend
-      await fetch("http://localhost:3000/messages/markasread", {
+      await fetch("https://bondify-1lzw.onrender.com/messages/markasread", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -237,7 +237,7 @@ useEffect(() => {
 
       try {
         const response = await fetch(
-          "http://localhost:3000/messages/uploadchatimage",
+          "https://bondify-1lzw.onrender.com/messages/uploadchatimage",
           {
             method: "POST",
             body: formdata,

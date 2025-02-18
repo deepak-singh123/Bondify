@@ -10,7 +10,7 @@ import { fetchfollowersinfo } from './store/followersSlice';
 import { fetchuserinfo } from './store/userinfoSlice';
 import { fetchAllUser } from './store/alluserSlice';
 
-const SOCKET_SERVER_URL = "http://localhost:3000";
+const SOCKET_SERVER_URL = "https://bondify-1lzw.onrender.com";
 
 // Socket instance (can be reinitialized)
 export let socket;

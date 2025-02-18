@@ -57,7 +57,7 @@ const Post = ({ post }) => {
 
     const handledelete = async (postid) => {
         try {
-            const response = await fetch(`http://localhost:3000/user/post/delete/${postid}`, {
+            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/delete/${postid}`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {
@@ -74,7 +74,7 @@ const Post = ({ post }) => {
 
     const handlepostlike = async (postid) => {
         try {
-            const response = await fetch(`http://localhost:3000/user/post/likepost/${postid}`, {
+            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/likepost/${postid}`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {

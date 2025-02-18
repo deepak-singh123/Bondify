@@ -17,7 +17,7 @@ export   const handlefollow=async(followid,following,dispatch)=>{
         const _id=followid.toString();
         if( following.some(user => user._id === followid)){
           
-            const response =  await fetch(`http://localhost:3000/user/connections/${followid}/unfollow`,{
+            const response =  await fetch(`https://bondify-1lzw.onrender.com/user/connections/${followid}/unfollow`,{
                 method:"POST",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}
@@ -30,7 +30,7 @@ export   const handlefollow=async(followid,following,dispatch)=>{
             
         }
         else{
-            const response =  await fetch(`http://localhost:3000/user/connections/${followid}/follow`,{
+            const response =  await fetch(`https://bondify-1lzw.onrender.com/user/connections/${followid}/follow`,{
                 method:"POST",
                 credentials: 'include',
                 headers: {'Content-Type': 'application/json'}

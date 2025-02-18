@@ -92,7 +92,7 @@ const Createpost = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/user/post/create', {
+            const response = await fetch('https://bondify-1lzw.onrender.com/user/post/create', {
                 method: 'POST',
                 credentials: 'include',
                 body: formdata
