@@ -11,7 +11,7 @@ import ProfileUpload from './components/Profileupload/ProfileUpload.jsx'
 import Home from './components/Home/Home.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Infopage from './components/Profile-Info/Infopage.jsx'
-import Chatlist from './components/Home/massages/chatlist.jsx'
+import Chatlist from './components/Home/massages/Chatlist.jsx'
 
 const router = createBrowserRouter([
   {
