@@ -10,12 +10,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://bondifyy.netlify.app/"],
     credentials: true,
 }));
 
 export const isauthenticated = async (req, res, next) => {
-    console.log("In authenticated  the body is",req.body);
+    console.log("In authenticated  the body is",req.cookies);
     try {
 
         const { authToken } = req.cookies;
