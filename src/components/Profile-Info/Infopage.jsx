@@ -4,11 +4,10 @@ import Userinfo from "./Userinfo";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { fetchuserinfo } from "../../store/userinfoSlice";
-import Postsinfo from "./postsinfo";
 import Post from "../Home/Post";
 import { BsPostcard } from "react-icons/bs";
 import Postcard from "./postcard";
-
+import Postsinfo from "./postsinfo";
 
 const Infopage = () => {
     const { id } = useParams(); 
