@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { fetchuserinfo } from "../../store/userinfoSlice";
 import Post from "../Home/Post";
 import { BsPostcard } from "react-icons/bs";
-import Postcard from "./postcard";
 import Postsinfo from "./postsinfo";
+import Postcard from "./postcard";
 
 const Infopage = () => {
     const { id } = useParams(); 
