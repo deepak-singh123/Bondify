@@ -81,7 +81,7 @@ const Chatlist = () => {
 
     try {
       // Mark messages as read in the backend
-      await fetch(`${API_BASE_URL}/messages/markasread`, {
+      await fetch(`/messages/markasread`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
