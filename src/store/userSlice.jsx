@@ -4,12 +4,12 @@ const initialState = {
     user: null,
     isLoggedIn: false
 };
-
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export const fetchUserData = createAsyncThunk(
     'user/fetchUserData',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch("/auth/isloggedin", {
+            const response = await fetch(`${API_BASE_URL}/auth/isloggedin`, {
                 method: "POST", 
                 credentials: 'include',
                 headers: {

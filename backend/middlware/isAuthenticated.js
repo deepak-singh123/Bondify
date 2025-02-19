@@ -20,7 +20,7 @@ export const isauthenticated = async (req, res, next) => {
             console.log("Authentication passed");
         }
         else{
-            console.log("Authentication failed. No token provided.");
+            console.log("Authentication failed.");
         }
         const { authToken } = req.cookies;
         if (!authToken) {
