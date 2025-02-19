@@ -2,5 +2,4 @@
 /auth/* https://bondify-1lzw.onrender.com/auth/:splat 200
 /user/* https://bondify-1lzw.onrender.com/user/:splat 200
 
-# Ensure React handles frontend routes
-/* /index.html 200
+
