@@ -9,7 +9,7 @@ export const fetchUserData = createAsyncThunk(
     'user/fetchUserData',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/isloggedin`, {
+            const response = await fetch(`/auth/isloggedin`, {
                 method: "POST", 
                 credentials: 'include',
                 headers: {
