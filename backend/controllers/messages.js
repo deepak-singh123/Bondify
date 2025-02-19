@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 
 export const getMessages = async (req, res) => {
     try {
+        console.log("inside getMessages");
         const senderId = req.user._id; // Sender ID from authenticated user
         const receiverId = req.params.id; // Receiver ID from route parameter
 
