@@ -6,7 +6,7 @@ const fetchunreadcount = createAsyncThunk(
     'messagecount/fetchunreadcount',
     async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/messages/unread`, {
+            const response = await fetch(`/messages/unread`, {
                 method: "GET",
                 credentials: 'include',
             });
