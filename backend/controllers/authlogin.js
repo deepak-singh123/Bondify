@@ -36,7 +36,7 @@ export const userlogin = async (req, res) => {
             httpOnly: true,
             maxAge: 3600000 * 5, // 5 hours
             secure: process.env.NODE_ENV === "production", // 🔹 Ensure secure cookies in production
-            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            sameSite:"None",
            
         });
       
