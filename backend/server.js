@@ -22,7 +22,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: ["http://localhost:5173", "https://bondifyy.netlify.app"],
+    origin: ["http://localhost:5173", "https://bondifyy.netlify.app","https://bondify-ten.vercel.app"],
     credentials: true,
 }));
 app.use(express.json());
@@ -57,7 +57,7 @@ const httpServer = createServer(app);
 // Initialize Socket.IO
 const io = new Server(httpServer, {
     cors: {
-        origin: ["http://localhost:5173", "https://bondifyy.netlify.app"],
+        origin: ["http://localhost:5173", "https://bondifyy.netlify.app","https://bondify-ten.vercel.app"],
         credentials: true,
     },
 });
