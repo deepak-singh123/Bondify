@@ -26,7 +26,7 @@ const Navbar=()=>{
     const isDarkMode = useSelector((store)=>store.theme.isDarkMode)
     const dispatch = useDispatch();
     const [currclass, setcurrentclass] = useState("");
-    const [profilePic, setProfilePic] = useState('/src/assets/images/default-profile.jpg');
+    const [profilePic, setProfilePic] = useState('https://res.cloudinary.com/dchjyy4cp/image/upload/v1740149254/Bondify/Assets/default-profile_sgtmpi.jpg');
     const sidebarRef = useRef(null);
     const profileRef = useRef(null);
     const [query, setQuery] = useState('');
@@ -107,7 +107,7 @@ const Navbar=()=>{
         <div className="navbar">
             <div className="navbar-left">
                 <div className="navbar-logo">
-                    <Link to="/home"><img src="/src/assets/images/bondify-logo.png" alt="Logo" /></Link>
+                    <Link to="/home"><img src="https://res.cloudinary.com/dchjyy4cp/image/upload/v1740149240/Bondify/Assets/bondify-logo_aoip5y.png" alt="Logo" /></Link>
                 </div>
                 <Searchbar   searchRef={searchRef} searchresultRef={searchresultRef} query={query} setQuery={setQuery} showResults={showResults} setShowResults={setShowResults}/>
             </div>
