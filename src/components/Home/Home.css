@@ -1565,4 +1565,7 @@ color: var(--text-primary)
     .search-result{
         height:fit-content;
     }
+    .follower-card{
+        display: flex!important;
+    }
 }

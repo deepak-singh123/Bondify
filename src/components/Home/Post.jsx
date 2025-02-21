@@ -75,7 +75,7 @@ const Post = ({ post }) => {
 
     const handlepostlike = async (postid) => {
         try {
-            const response = await fetch(`https://bondify-1lzw.onrender.com/user/post/likepost/${postid}`, {
+            const response = await fetch(`/user/post/likepost/${postid}`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {
