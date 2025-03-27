@@ -195,7 +195,7 @@ const Chatlist = () => {
 
       try {
         const response = await fetch(
-          "https://bondify-1lzw.onrender.com/messages/uploadchatimage",
+          "/messages/uploadchatimage",
           {
             method: "POST",
             body: formdata,
