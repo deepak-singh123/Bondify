@@ -1,6 +1,7 @@
 import { user } from "../models/user.js";
 
 export const followUser =  async (req,res)=>{
+  console.log("Inside follow");
 
 
    const curruser = req.user;
@@ -23,6 +24,8 @@ export const followUser =  async (req,res)=>{
 }
 
 export const unfollowUser = async(req,res)=>{
+     console.log("Inside Unfollow");
+
     const curruser = req.user;
     const unfollowuser = await user.findById(req.params.id);
     
