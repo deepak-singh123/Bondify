@@ -9,6 +9,7 @@ import { fetchfollowinginfo } from './store/followingSlice';
 import { fetchfollowersinfo } from './store/followersSlice';
 import { fetchuserinfo } from './store/userinfoSlice';
 import { fetchAllUser } from './store/alluserSlice';
+import { useNavigate } from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const SOCKET_SERVER_URL = `${API_BASE_URL}`;
@@ -18,8 +19,10 @@ export let socket;
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isDarkMode = useSelector((store) => store.theme.isDarkMode);
   const curruser = useSelector((store) => store.user.user);
+  const isLoggedIn = useSelector((store) => store.user.isLoggedIn);
 
   // Handle user data fetching on app load
   useEffect(() => {
@@ -27,7 +30,12 @@ function App() {
       .unwrap()
       .catch((err) => console.error("Failed to fetch user data:", err));
   }, [dispatch]);
-
+  
+ useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/home"); // Redirect if logged in
+    }
+  }, [isLoggedIn, navigate]);
   useEffect(() => {
     if (curruser && curruser._id) {
         socket = io(SOCKET_SERVER_URL, { withCredentials: true });
