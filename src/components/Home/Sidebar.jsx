@@ -49,8 +49,7 @@ const Sidebar = ({currclass, sidebarRef}) => {
 
     const menuItems = [
         { id: 'home', icon: <RiHome5Fill />, label: 'Home', onClick: () => navigate('/home') },
-        { /*id: 'account', icon: <RiAccountCircleFill />, label: 'Account', onClick: () => navigate('/account')*/ },
-        { /*id: 'settings', icon: <IoSettingsSharp />, label: 'Settings', onClick: () => navigate('/settings')*/ },
+      
     ];
 
     return (
