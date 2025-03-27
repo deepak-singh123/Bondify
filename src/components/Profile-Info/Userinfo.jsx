@@ -39,7 +39,8 @@ const  Userinfo = ()=>{
 
             <div className="Profile-buttons">
                 <button onClick={handleFollowClick} className="follow-button">{isFollowing}</button>
-                <button className="message-button">Message</button>
+                               {/*<button className="message-button">Message</button>*/}
+
             </div>
             <div className="user-stats">
                 <div className="stat">
