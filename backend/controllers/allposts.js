@@ -62,6 +62,7 @@ export const allposts = async (req, res) => {
 
 
     export const deletepost = async (req, res) => {
+        console.log("inside delete");
         const postid = req.params.id;
         const curruser= req.user;
         try {
