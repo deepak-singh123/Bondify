@@ -15,7 +15,7 @@ import Chatlist from './components/Home/massages/Chatlist.jsx'
 
 const router = createBrowserRouter([
   {
-    path: "/home",
+    path: "/",
     element: <App />,
     children: [
       { path: "/", element: <Signin /> },
