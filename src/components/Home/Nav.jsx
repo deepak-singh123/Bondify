@@ -40,7 +40,7 @@ const Navbar=()=>{
         dispatch(fetchunreadcount());
 
 
-    }, [dispatch,totalunread]);
+    }, [dispatch]);
 
 
 

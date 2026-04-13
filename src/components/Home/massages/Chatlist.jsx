@@ -152,9 +152,23 @@ const Chatlist = () => {
       );
 
       if (!messageExists) {
-
         dispatch(addmessage(newMessage));
         settriggermessage(data.sender);
+
+        const isFromCurrentChat = chatperson && data.sender === chatperson._id;
+        if (!isFromCurrentChat) {
+          dispatch(settotalcount((totalmessagecount || 0) + 1));
+          const existingEntry = unreadcounts.find((u) => u._id === data.sender);
+          if (existingEntry) {
+            dispatch(setunreadcount(
+              unreadcounts.map((u) =>
+                u._id === data.sender ? { ...u, count: u.count + 1 } : u
+              )
+            ));
+          } else {
+            dispatch(setunreadcount([...unreadcounts, { _id: data.sender, count: 1 }]));
+          }
+        }
       }
     });
 
@@ -175,10 +189,25 @@ const Chatlist = () => {
           msg.timestamp === newMessage.timestamp
       );
 
-      if (!messageExists) {
-        console.log("setting triggermessage as ",data.sender);
+     if (!messageExists) {
+        console.log("setting triggermessage as ", data.sender);
         dispatch(addmessage(newMessage));
         settriggermessage(data.sender);
+
+        const isFromCurrentChat = chatperson && data.sender === chatperson._id;
+        if (!isFromCurrentChat) {
+          dispatch(settotalcount((totalmessagecount || 0) + 1));
+          const existingEntry = unreadcounts.find((u) => u._id === data.sender);
+          if (existingEntry) {
+            dispatch(setunreadcount(
+              unreadcounts.map((u) =>
+                u._id === data.sender ? { ...u, count: u.count + 1 } : u
+              )
+            ));
+          } else {
+            dispatch(setunreadcount([...unreadcounts, { _id: data.sender, count: 1 }]));
+          }
+        }
       }
     });
 

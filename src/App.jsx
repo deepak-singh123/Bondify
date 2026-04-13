@@ -10,6 +10,8 @@ import { fetchfollowersinfo } from './store/followersSlice';
 import { fetchuserinfo } from './store/userinfoSlice';
 import { fetchAllUser } from './store/alluserSlice';
 import { useNavigate } from 'react-router-dom';
+import { fetchunreadcount, settotalcount, setunreadcount } from './store/messagecount';
+
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const SOCKET_SERVER_URL = `${API_BASE_URL}`;
@@ -46,6 +48,9 @@ function App() {
             console.log("Socket connected and user_online emitted");
         });
 
+        socket.on("new_message_notification", ({ senderId }) => {
+            dispatch(fetchunreadcount());
+        });
         // Cleanup on unmount
         return () => {
             if (socket) {
