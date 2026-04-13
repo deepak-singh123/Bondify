@@ -109,9 +109,11 @@ io.on("connection", (socket) => {
                         by:"friend",
                         createdAt,
                     });
-                }
-                 //Instantly sending event that a new unreadmessage is recieved
+
+                //Instantly sending event that a new unreadmessage is recieved
                  io.to(receiverSocketId).emit("new_message_notification",{senderId:senderId})
+                }
+              
                 // Save the message to the database
                 await Message.create({
                     sender: senderId,
@@ -145,8 +147,12 @@ io.on("connection", (socket) => {
                 type,
                 by: "friend",
             });
-            //Instantly sending event that a new unreadmessage is recieved
+           
+
+             //Instantly sending event that a new unreadmessage is recieved
             io.to(receiverSocketId).emit("new_message_notification",{senderId:senderId})
+
+            
             console.log(`Message sent to user ${receiverId}`);
         }
 
