@@ -1,0 +1,148 @@
+
+.profile-upload-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-image: url(https://images.unsplash.com/photo-1475694867812-f82b8696d610?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80);
+    object-fit: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.profile-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width:25vw;
+    height:80vh;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;    border-radius: 35px;
+  
+}
+.profile-background{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 80%;
+    background-color: #5235AB;
+    border-radius: 35px 35px 50px 50px;
+}
+
+.profile-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 180px;
+    width: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #6A4CC7;
+    top: 0%;
+}
+.profile-upload{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 0px;
+}
+
+.user-bio{
+    font-size: larger;
+    font-display: bold;
+    color: black;
+    background-color: white;
+    position: relative;
+    margin-top: -40%;
+   height: 30%;
+   width: 90%;
+   border-radius: 15px;
+   padding: 10px; /* Add padding to control text position inside the box */
+    line-height: 1.5; /* Ensure text has proper spacing */
+    box-sizing: border-box; /* Include padding in height/width calculation */
+    display: block;
+}
+.user-bio::placeholder {
+    color: black; /* Change placeholder text color */
+    font-style: italic; /* Make placeholder text italic */
+    font-size: 14px; /* Adjust font size */
+    opacity: 1; /* Set opacity */
+    
+}
+.profile-image img {
+    width: 90%; /* Make the image fill the container */
+    height: 90%; /* Maintain container height */
+    object-fit: cover; /* Ensures the image fits while keeping aspect ratio */
+    border-radius: 50%; /* Ensures the image is also circular */
+}
+ 
+
+#profilePhoto{
+    margin: 10% 10% 40% 10%;
+    position: relative;
+    color:white ;
+    width: 70%;
+    height: 15%;
+    border-radius: 20px;
+    font-size: 100%;
+    background-color: black;
+}
+#profilePhoto::-webkit-file-upload-button {
+    color: white;
+    height: 100%;
+    width: 50%;
+    border-radius: 20px;
+    background-color: #5235AB;
+    font-size: 100%;
+    font-weight: bold;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    overflow: visible;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+}
+
+#profilePhoto::-webkit-file-upload-button:active {
+    transform:translate3d(0px, -4px, 0px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+    transform: translateY(2px); 
+    background-color: #5235AB;
+}
+
+.upload-button{
+    position: relative;
+    color:white ;
+    background-color: #5235AB;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+
+    width: 70%;
+    height: 15%;
+    border-radius: 20px;
+    font-size: 100%;
+}
+.upload-button:active{
+    transform:translate3d(0px, -2px, 0px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+    transform: translateY(2px); 
+    background-color: #5235AB;
+}
+
+
+@media (max-width: 768px) {
+    .profile-container{
+        height: 90vh;
+        width: 90vw;
+    }
+
+    
+}
