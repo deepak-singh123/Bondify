@@ -173,9 +173,9 @@ io.on("connection", (socket) => {
     socket.on("message_seen", data=>{
         const { senderId, receiverId } = data;
         const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
-        
+        console.log("inside the server message seen");
         if (receiverSocketId) {
-            console.log("emitting to message_response");
+            console.log("RECIEVER ONLINE");
             io.to(receiverSocketId).emit("message_response", {
                 sender:senderId,
                 receiver:receiverId,

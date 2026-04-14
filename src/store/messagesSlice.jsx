@@ -46,6 +46,13 @@ const messagesSlice = createSlice({
           clearMessages: () => {
             return [];
           },
+           markMessagesRead: (state) => {
+            state.forEach((msg) => {
+                if (msg.by === "self") {
+                    msg.isRead = true;
+                }
+            });
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchmessages.fulfilled, (state, action) => {
@@ -54,6 +61,6 @@ const messagesSlice = createSlice({
     },
 });
 
-export const { addmessage, clearMessages } = messagesSlice.actions;
+export const { addmessage, clearMessages , markMessagesRead } = messagesSlice.actions;
 export { fetchmessages };
 export default messagesSlice.reducer;

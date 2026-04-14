@@ -10,6 +10,7 @@ import {
   addmessage,
   clearMessages,
   fetchmessages,
+  markMessagesRead,
 } from "../../../store/messagesSlice";
 import { socket } from "../../../App";
 import { IoCheckmarkDone } from "react-icons/io5";
@@ -21,7 +22,6 @@ import {
 import { MdKeyboardBackspace } from "react-icons/md";
 
 const Chatlist = () => {
-  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
   const followers = useSelector((store) => store.followersinfo.followers);
   const following = useSelector((store) => store.followinginfo.following);
   const [chatperson, setchatperson] = useState(null);
@@ -40,20 +40,22 @@ const Chatlist = () => {
   const { unreadcounts, totalmessagecount } = useSelector(
     (state) => state.messagecount
   );
-  useEffect(() => {
 
-      const sortedList = [...connectionlist].sort((a, b) => {
+  // Use a ref for chatperson so socket handlers always get the latest value
+  // without needing to re-register every time chatperson changes
+  const chatpersonRef = useRef(null);
+  useEffect(() => {
+    chatpersonRef.current = chatperson;
+  }, [chatperson]);
+
+  useEffect(() => {
+    const sortedList = [...connectionlist].sort((a, b) => {
       const isOnlineA = onlineusers.includes(a._id) ? 1 : 0;
       const isOnlineB = onlineusers.includes(b._id) ? 1 : 0;
-
-      // Online users come first
       return isOnlineB - isOnlineA;
     });
-
     setsortedconnectionlist(sortedList);
-    
   }, [onlineusers, followers, following]);
-
 
   const handleimage = (e) => {
     file = e.target.files[0];
@@ -61,7 +63,6 @@ const Chatlist = () => {
       alert("File size exceeds the limit of 5MB.");
       return;
     }
-
     if (file) {
       setFile(file);
       const reader = new FileReader();
@@ -69,11 +70,8 @@ const Chatlist = () => {
         setchatimage(reader.result);
       };
       reader.readAsDataURL(file);
-    } else {
-      console.log("No file selected");
     }
   };
-
 
   const getfrienddetail = async (friend, color) => {
     setchatperson(friend);
@@ -81,7 +79,6 @@ const Chatlist = () => {
     setcolor(color);
 
     try {
-      // Mark messages as read in the backend
       await fetch(`/messages/markasread`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,19 +89,15 @@ const Chatlist = () => {
         }),
       });
 
-      // Update Redux state for unread counts
       const updatedUnreadCounts = unreadcounts.filter(
         (item) => item._id !== friend._id
-      ); // Remove friend from unread list
+      );
       const friendUnreadCount =
         unreadcounts.find((item) => item._id === friend._id)?.count || 0;
       const newTotalUnread = totalmessagecount - friendUnreadCount;
 
-      // Dispatch updates
-      dispatch(setunreadcount(updatedUnreadCounts)); // Update unread counts grouped by friends
-      dispatch(settotalcount(newTotalUnread)); // Update total unread count
-
-      // Optionally fetch updated counts from the server
+      dispatch(setunreadcount(updatedUnreadCounts));
+      dispatch(settotalcount(newTotalUnread));
       dispatch(fetchunreadcount());
     } catch (error) {
       console.error("Error marking messages as read:", error);
@@ -112,8 +105,7 @@ const Chatlist = () => {
   };
 
   const handlemessage = (e) => {
-    const message = e.target.value;
-    setmessage(message);
+    setmessage(e.target.value);
   };
 
   useEffect(() => {
@@ -124,7 +116,6 @@ const Chatlist = () => {
       ...following,
     ];
     setConnectionList(updatedConnectionList);
-    
   }, [onlineusers, followers, following]);
 
   useEffect(() => {
@@ -134,89 +125,150 @@ const Chatlist = () => {
     });
   }, [curruser._id, followers, following]);
 
+  // Register socket listeners ONCE on mount using refs for fresh values
   useEffect(() => {
     socket.on("receive_message", (data) => {
-      const by = data.sender === curruser._id ? "self" : "friend";
+      const currentChat = chatpersonRef.current;
+
+      // Bug fix: server sends data.sender not data.senderId
+      const isFromCurrentChat = currentChat && data.sender === currentChat._id;
+
       const newMessage = {
-        senderId: data.senderId,
-        by: by,
+        senderId: data.sender,
+        by: "friend",
         content: data.content,
         createdAt: data.createdAt,
         type: data.type,
       };
 
-      const messageExists = messages.some(
-        (msg) =>
-          msg.content === newMessage.content &&
-          msg.timestamp === newMessage.timestamp
-      );
-
-      if (!messageExists) {
+      if (isFromCurrentChat) {
+        // Only add to chat UI if it's from the person currently open
         dispatch(addmessage(newMessage));
-        settriggermessage(data.sender);
-
-        const isFromCurrentChat = chatperson && data.sender === chatperson._id;
-        if (!isFromCurrentChat) {
-          dispatch(settotalcount((totalmessagecount || 0) + 1));
-          const existingEntry = unreadcounts.find((u) => u._id === data.sender);
-          if (existingEntry) {
-            dispatch(setunreadcount(
+        fetch(`/messages/markasread`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            senderId: currentChat._id,
+            receiverId: curruser._id,
+          }),
+        }).catch((err) => console.error("markasread error:", err));
+      } else {
+        // Update unread badge for background messages
+        dispatch(settotalcount((totalmessagecount || 0) + 1));
+        const existingEntry = unreadcounts.find((u) => u._id === data.sender);
+        if (existingEntry) {
+          dispatch(
+            setunreadcount(
               unreadcounts.map((u) =>
                 u._id === data.sender ? { ...u, count: u.count + 1 } : u
               )
-            ));
-          } else {
-            dispatch(setunreadcount([...unreadcounts, { _id: data.sender, count: 1 }]));
-          }
+            )
+          );
+        } else {
+          dispatch(
+            setunreadcount([
+              ...unreadcounts,
+              { _id: data.sender, count: 1 },
+            ])
+          );
         }
       }
+
+      settriggermessage(data.sender);
     });
 
     socket.on("receive_image", (data) => {
-      console.log("received image= ", data);
-      const by = data.sender === curruser._id ? "self" : "friend";
+      const currentChat = chatpersonRef.current;
+      const isFromCurrentChat = currentChat && data.sender === currentChat._id;
+
       const newMessage = {
         senderId: data.sender,
-        by: by,
+        by: "friend",
         content: data.content,
         createdAt: data.createdAt,
         type: data.type,
       };
 
-      const messageExists = messages.some(
-        (msg) =>
-          msg.content === newMessage.content &&
-          msg.timestamp === newMessage.timestamp
-      );
-
-     if (!messageExists) {
-        console.log("setting triggermessage as ", data.sender);
+      if (isFromCurrentChat) {
         dispatch(addmessage(newMessage));
-        settriggermessage(data.sender);
-
-        const isFromCurrentChat = chatperson && data.sender === chatperson._id;
-        if (!isFromCurrentChat) {
-          dispatch(settotalcount((totalmessagecount || 0) + 1));
-          const existingEntry = unreadcounts.find((u) => u._id === data.sender);
-          if (existingEntry) {
-            dispatch(setunreadcount(
+        //updates that messages had been seen
+        fetch(`/messages/markasread`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            senderId: currentChat._id,
+            receiverId: curruser._id,
+          }),
+        }).catch((err) => console.error("markasread error:", err));
+      } else {
+        dispatch(settotalcount((totalmessagecount || 0) + 1));
+        const existingEntry = unreadcounts.find((u) => u._id === data.sender);
+        if (existingEntry) {
+          dispatch(
+            setunreadcount(
               unreadcounts.map((u) =>
                 u._id === data.sender ? { ...u, count: u.count + 1 } : u
               )
-            ));
-          } else {
-            dispatch(setunreadcount([...unreadcounts, { _id: data.sender, count: 1 }]));
-          }
+            )
+          );
+        } else {
+          dispatch(
+            setunreadcount([
+              ...unreadcounts,
+              { _id: data.sender, count: 1 },
+            ])
+          );
         }
+      }
+
+      settriggermessage(data.sender);
+    });
+
+    // message_response: chatperson's app tells us they saw our messages
+    socket.on("message_response", (data) => {
+      if (data.seen) {
+        dispatch(markMessagesRead());
       }
     });
 
     return () => {
       socket.off("receive_message");
-    socket.off("receive_image");
-    socket.off("message_seen");
+      socket.off("receive_image");
+      socket.off("message_response");
     };
-  }, [dispatch, messages, curruser._id]);
+  }, []); // Empty array: register once, use ref for fresh chatperson value
+
+  // Notify chatperson that we have seen their messages
+  useEffect(() => {
+    if (chatperson) {
+      // senderId = person whose messages we read (chatperson)
+      // receiverId = chatperson, so the server notifies them
+      socket.emit("message_seen", {
+        senderId: chatperson._id,
+        receiverId: chatperson._id,
+      });
+     
+    }
+  }, [chatperson, messages]);
+
+  useEffect(() => {
+    if (chatperson) {
+      dispatch(clearMessages());
+      dispatch(fetchmessages({ id: chatperson._id, curruser })).unwrap();
+    }
+  }, [dispatch, chatperson, curruser]);
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handlesendmessage = async () => {
     if (file) {
@@ -225,17 +277,13 @@ const Chatlist = () => {
       formdata.append("chatimage", file);
 
       try {
-        const response = await fetch(
-          "/messages/uploadchatimage",
-          {
-            method: "POST",
-            body: formdata,
-            credentials: "include",
-          }
-        );
+        const response = await fetch("/messages/uploadchatimage", {
+          method: "POST",
+          body: formdata,
+          credentials: "include",
+        });
 
         const result = await response.json();
-        console.log("result = ", result);
         const newMessage = {
           senderId: curruser._id,
           by: "self",
@@ -266,8 +314,6 @@ const Chatlist = () => {
         createdAt: new Date().toISOString(),
       };
 
-      // Emit the message using socket
-
       socket.emit("send_message", {
         senderId: curruser._id,
         receiverId: chatperson._id,
@@ -281,23 +327,6 @@ const Chatlist = () => {
       setmessage("");
     }
   };
-
-  useEffect(() => {
-    if (chatperson) {
-      dispatch(clearMessages());
-      dispatch(fetchmessages({ id: chatperson._id, curruser })).unwrap();
-    }
-  }, [dispatch, chatperson, curruser]);
-
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   return (
     <>
@@ -318,10 +347,9 @@ const Chatlist = () => {
           <div className={`chatarea ${active}`}>
             {chatperson && (
               <div className="chatarea-header">
-               <div className="backbtn">
-                <MdKeyboardBackspace size={30} onClick={() => setactive(" ")}/>
-
-              </div>
+                <div className="backbtn">
+                  <MdKeyboardBackspace size={30} onClick={() => setactive(" ")} />
+                </div>
                 <div className="follower-card header">
                   <div className="follower-info">
                     <Badge
@@ -333,7 +361,6 @@ const Chatlist = () => {
                         horizontal: "right",
                       }}
                     ></Badge>
-
                     <img
                       src={chatperson.profilePicture}
                       alt={chatperson.username}
@@ -350,19 +377,19 @@ const Chatlist = () => {
                   messages.map((msg, index) => (
                     <div
                       key={index}
-                      className={`message ${msg.by === "self" ? "sent" : "received"
-                        } ${msg.type === "text" ? " " : "image"}`}
+                      className={`message ${
+                        msg.by === "self" ? "sent" : "received"
+                      } ${msg.type === "text" ? " " : "image"}`}
                     >
                       {msg.type === "text" ? (
                         <>
                           <div className="message-text">{msg.content}</div>
                           <div className="message-about">
-                            {" "}
                             <div className="message-timestamp">
                               {new Date(msg.createdAt).toLocaleString("en-US", {
                                 hour: "numeric",
                                 minute: "numeric",
-                                hour12: true, // For 12-hour format with AM/PM
+                                hour12: true,
                               })}
                             </div>
                             <div className="message-status">
@@ -380,14 +407,13 @@ const Chatlist = () => {
                               alt="Received"
                               className="received-image"
                             />
-                          </div>{" "}
+                          </div>
                           <div className="message-about">
-                            {" "}
                             <div className="message-timestamp">
                               {new Date(msg.createdAt).toLocaleString("en-US", {
                                 hour: "numeric",
                                 minute: "numeric",
-                                hour12: true, // For 12-hour format with AM/PM
+                                hour12: true,
                               })}
                             </div>
                             <div className="message-status">
@@ -426,13 +452,13 @@ const Chatlist = () => {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    handlesendmessage(); 
+                    handlesendmessage();
                   }
                 }}
                 className="chatarea-chat-input"
                 placeholder="Type a message"
               />
-              <button onClick={handlesendmessage}  >
+              <button onClick={handlesendmessage}>
                 <IoSend />
               </button>
             </div>
