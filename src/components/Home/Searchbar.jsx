@@ -45,7 +45,7 @@ const Searchbar = ({searchRef, searchresultRef, query, setQuery ,showResults, se
     return (
         <>
           <div className="search-bar" ref={searchRef}>
-                    <input type="text"  value={query}
+                    <input className="search-input" type="text"  value={query}
                 onChange={(e)=>handleSearch(e)} placeholder="Search" />
                     <span><FaSearch />  </span>
                 </div>

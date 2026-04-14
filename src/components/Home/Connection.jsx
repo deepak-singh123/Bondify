@@ -49,7 +49,7 @@ const Connection = ({follower,following})=>{
            <div  className="follower-card">
                    <div onClick={() => handleResultClick(follower)} className="follower-info"> 
                     <img src={follower.profilePicture} alt={follower.username}  />
-                    <h2 className="username">{follower.username}</h2>
+                   <div className="follower-name"> <h2 className="username">{follower.username}</h2></div>
                     </div>
                     <button
                         onClick={handleFollowClick}

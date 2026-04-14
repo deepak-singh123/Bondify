@@ -108,7 +108,10 @@ body {
 .search-bar span {
     color: var(--text-secondary);
 }
-
+ .search-input{
+        outline: none;
+        border: none;
+    }
 .search-results {
     position: absolute;
     top: 100%;
@@ -713,8 +716,8 @@ body {
 .follower-info {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
+    gap: 10px;
+    min-width: 0;
 }
 
 .follower-info img {
@@ -724,16 +727,20 @@ body {
     object-fit: cover;
     border: 2px solid;
 }
-
-.follower-info .username {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0;
+.follower-name {
+    min-width: 0;
+    overflow: hidden;
+}
+.follower-name .username {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .username {
+    
     font-size: 16px;
+    overflow: hidden;
 }
 
 .username:hover {
@@ -1197,9 +1204,16 @@ a {
     }
 
     .search-bar input {
-        width: 10rem;
+    width: 10rem;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+    .search-input{
+        outline: none;
+        border: none;
     }
-
+  
     .navbar-right {
         gap: 0.75rem;
         font-size: 1.2rem;
