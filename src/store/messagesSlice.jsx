@@ -15,15 +15,18 @@ const fetchmessages = createAsyncThunk(
 
             if (!response.ok) throw new Error("Failed to fetch messages");
 
-            const messages = await response.json();
+            const text = await response.text();
+
+const messages = text ? JSON.parse(text) : [];
        
             const processedMessages = messages.map((message) => ({
-                id: message.id,
+                id: message._id,
                 by: message.sender == curruser._id ? "self" : "friend",
                 content: message.content,
                 isRead: message.isRead,
                 createdAt: message.createdAt,
-                type:message.type
+                type:message.type,
+                public_id:message.public_id
             }));
 
             return processedMessages;
@@ -53,6 +56,12 @@ const messagesSlice = createSlice({
                 }
             });
         },
+
+        deletemessages:(state,action)=>{
+          const  messeges_to_delete = action.payload
+
+          return state.filter((msg)=>!messeges_to_delete.includes(msg.id))
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchmessages.fulfilled, (state, action) => {
@@ -61,6 +70,6 @@ const messagesSlice = createSlice({
     },
 });
 
-export const { addmessage, clearMessages , markMessagesRead } = messagesSlice.actions;
+export const { addmessage, clearMessages , markMessagesRead ,deletemessages} = messagesSlice.actions;
 export { fetchmessages };
 export default messagesSlice.reducer;

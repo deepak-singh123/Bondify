@@ -2,7 +2,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import Friends from "./Friends";
 import Navbar from "../Nav";
-import { IoSend } from "react-icons/io5";
+import { IoSend  } from "react-icons/io5";
+import { MdDelete } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import Badge from "@mui/material/Badge";
 import { FaRegImage } from "react-icons/fa6";
@@ -11,6 +12,7 @@ import {
   clearMessages,
   fetchmessages,
   markMessagesRead,
+  deletemessages
 } from "../../../store/messagesSlice";
 import { socket } from "../../../App";
 import { IoCheckmarkDone } from "react-icons/io5";
@@ -20,6 +22,7 @@ import {
   setunreadcount,
 } from "../../../store/messagecount";
 import { MdKeyboardBackspace } from "react-icons/md";
+import { Button } from "@mui/material";
 
 const Chatlist = () => {
   const followers = useSelector((store) => store.followersinfo.followers);
@@ -33,6 +36,7 @@ const Chatlist = () => {
   const messages = useSelector((store) => store.messages);
   const [connectionlist, setConnectionList] = useState([]);
   const [sortedconnectionlist, setsortedconnectionlist] = useState([]);
+  const fileInputRef = useRef(null);
   const [chatimage, setchatimage] = useState(null);
   let [file, setFile] = useState(null);
   const [triggermessageid, settriggermessage] = useState(null);
@@ -40,7 +44,11 @@ const Chatlist = () => {
   const { unreadcounts, totalmessagecount } = useSelector(
     (state) => state.messagecount
   );
-
+const [selected, setSelected] = useState(new Set());
+const [selMode, setSelMode]   = useState(false);
+const [pressing, setPressing] = useState(null); 
+const holdTimer =  useRef(null);
+const justHeld = useRef(false);
   // Use a ref for chatperson so socket handlers always get the latest value
   // without needing to re-register every time chatperson changes
   const chatpersonRef = useRef(null);
@@ -134,6 +142,7 @@ const Chatlist = () => {
       const isFromCurrentChat = currentChat && data.sender === currentChat._id;
 
       const newMessage = {
+        
         senderId: data.sender,
         by: "friend",
         content: data.content,
@@ -284,20 +293,29 @@ const Chatlist = () => {
         });
 
         const result = await response.json();
+        setFile(null);
+        setchatimage(null);
+        if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+        }
         const newMessage = {
+        
           senderId: curruser._id,
           by: "self",
           content: result.content,
           type: "image",
           createdAt: new Date().toISOString(),
+          public_id:result.public_id,
         };
 
         await socket.emit("send_image", {
+         
           senderId: curruser._id,
           receiverId: chatperson._id,
           content: result.content,
           type: "image",
           by: "friend",
+          public_id:result.public_id,
           createdAt: new Date().toISOString(),
         });
 
@@ -328,6 +346,91 @@ const Chatlist = () => {
     }
   };
 
+
+const togglemsg=(id)=>{
+  setSelected((prev)=>{
+    const newselectedmsg = new Set(prev);
+
+    if(newselectedmsg.has(id)){
+      newselectedmsg.delete(id);
+    }
+    else{
+      newselectedmsg.add(id);
+    }
+
+    if(newselectedmsg.size===0){
+      setSelMode(false);
+    }
+    return newselectedmsg
+  })
+}
+const Handleholdstart=(id)=>{
+  
+  holdTimer.current = setTimeout(()=>{
+    justHeld.current=true;
+    setSelMode(true);
+    togglemsg(id);
+  },500)
+
+}
+
+const Handleholdend=()=>{
+  clearTimeout(holdTimer.current) //Not selects  chat if not holded for 500ms
+}
+
+
+const Handlemessageclick=(id)=>{ //selects chats  on tap if selMode is On
+  if (justHeld.current) {
+    justHeld.current = false;
+    return;
+  } 
+if(!selMode) return;
+togglemsg(id);
+}
+
+const Handleallmessage = (messages)=>{
+  if(selected.size>0){
+  setSelected(new Set())
+}
+  else{
+    setSelected(new Set(messages.map(msg=>msg.id)))
+  }
+
+
+}
+
+
+const handledeletemessage = async()=>{
+ if(selected.size>0){
+  try{
+    const response = await fetch("messages/deletemessages",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+          chats_to_delete: Array.from(selected)
+        }),
+      credentials:"include"
+    })
+
+    const result = await response.json();
+    dispatch(deletemessages(Array.from(selected)));
+   setSelected(new Set());
+
+
+
+
+  }
+  catch(err){
+     new Error(err);
+    
+  }
+ }
+
+}
+
+
   return (
     <>
       <div className={`messages-container ${active}`}>
@@ -347,6 +450,8 @@ const Chatlist = () => {
           <div className={`chatarea ${active}`}>
             {chatperson && (
               <div className="chatarea-header">
+
+                <div className="backbtn-profile">
                 <div className="backbtn">
                   <MdKeyboardBackspace size={30} onClick={() => setactive(" ")} />
                 </div>
@@ -369,6 +474,18 @@ const Chatlist = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="chat-delete-box">
+                {selMode && (
+                   <div className="selection-bar">
+                    {selected.size} selected
+               </div>)}
+                <div className="delete-chat"  onClick={handledeletemessage}><MdDelete fontSize={"1.2rem"}/>
+ </div>
+                <div className="select-all"><Button onClick={()=>Handleallmessage(messages)} ><input type="checkbox" checked={selected.size === messages.length && messages.length > 0}
+      readOnly></input> Select all</Button></div>
+                </div>
+              </div>
             )}
 
             {chatperson && (
@@ -379,7 +496,22 @@ const Chatlist = () => {
                       key={index}
                       className={`message ${
                         msg.by === "self" ? "sent" : "received"
-                      } ${msg.type === "text" ? " " : "image"}`}
+                      } ${msg.type === "text" ? " " : "image"}
+                       ${selected.has(msg.id)?"chat-selected":"chat-notselected"}
+                       
+                      `}
+                      //desktop
+                       onMouseDown={()=> Handleholdstart(msg.id)}
+                       onMouseUp={Handleholdend}
+                       onMouseLeave={Handleholdend}
+
+                       //android
+                       onTouchStart={()=>Handleholdstart(msg.id)}
+                       onTouchEnd={Handleholdend}
+                       onTouchCancel={Handleholdend}
+
+                       onClick={()=>Handlemessageclick(msg.id)}
+                       
                     >
                       {msg.type === "text" ? (
                         <>
@@ -436,6 +568,7 @@ const Chatlist = () => {
             <div className="chatarea-input">
               <button className="option-btn">
                 <input
+                  ref={fileInputRef}
                   onChange={(e) => handleimage(e)}
                   className="postinputimage"
                   type="file"

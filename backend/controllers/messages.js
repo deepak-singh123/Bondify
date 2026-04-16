@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 
 export const getMessages = async (req, res) => {
     try {
-        console.log("inside getMessages");
+        
         const senderId = req.user._id; // Sender ID from authenticated user
         const receiverId = req.params.id; // Receiver ID from route parameter
 
@@ -17,7 +17,7 @@ export const getMessages = async (req, res) => {
         }).sort({ createdAt: 1 }); // Sort messages by creation time (oldest to newest)
 
         if (!messages || messages.length === 0) {
-            return res.status(204).json({ error: "No messages found between these users." });
+            return res.status(204).json([]);
         }
 
         return res.status(200).json(messages);
@@ -68,6 +68,39 @@ export const sendmessage = async (req, res) => {
 
 
 
+export const deleteMessage = async (req, res) => {
+    console.log("Inside delete message req.body= ",req.body);
+  const { chats_to_delete } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const messages = await Message.find({
+      _id: { $in: chats_to_delete },
+      $or: [
+        { sender: userId },
+        { receiver: userId }
+      ]
+    });
+    console.log("the message extracted is ",messages);
+
+    // delete image files from Cloudinary
+    for (const msg of messages) {
+      if (msg.type === "image" && msg.public_id) {
+        console.log("image_to_be_deleted",msg.public_id);
+        await cloudinary.uploader.destroy(msg.public_id);
+      }
+    }
+
+    // delete from MongoDB
+    await Message.deleteMany({
+      _id: { $in: messages.map(msg => msg._id) }
+    });
+
+    return res.status(200).json({ message: "success" });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+};
 
 
 export const uploadchatimage = async (req, res) => {
@@ -88,7 +121,8 @@ await fs.unlink(req.file.path).catch((err) =>
   console.error('Failed to delete file:', err)
 );
 
-return res.status(200).json({ message: 'File uploaded successfully',content:result.secure_url});
+console.log("uploadchatimg result",result);
+return res.status(200).json({ message: 'File uploaded successfully',content:result.secure_url,public_id:result.public_id});
 }
 catch(err){
     console.log(err);
@@ -103,7 +137,6 @@ catch(err){
 
 
 export const markasread =  async (req, res) => {
-    console.log("inside mark as read");
     const { senderId, receiverId } = req.body;
 
     try {
@@ -118,7 +151,6 @@ export const markasread =  async (req, res) => {
 }
 
 export const unreadmessages = async (req,res)=>{
-    console.log("inside unreadmessages");
         const  userId = req.user._id;
         console.log("userid inside unread= ",userId);
         try {

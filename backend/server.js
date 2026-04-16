@@ -89,7 +89,7 @@ io.on("connection", (socket) => {
 
     socket.on("send_image",async(data)=>{
         try {
-            const { senderId, receiverId, content, createdAt ,by} = data;
+            const { id,senderId, receiverId, content, createdAt ,by,public_id} = data;
             console.log("Uploading image...");
             
             // Upload to Cloudinary
@@ -102,11 +102,13 @@ io.on("connection", (socket) => {
                 // Emit to receiver if they are online
                 if (receiverSocketId) {
                     io.to(receiverSocketId).emit("receive_image", {
+                        id:id,
                         sender:senderId,
                         receiver:receiverId,
                         content: content,
                         type: "image",
                         by:"friend",
+                        public_id:public_id,
                         createdAt,
                     });
 
@@ -121,6 +123,8 @@ io.on("connection", (socket) => {
                     content: content,
                     type: "image",
                     isRead: false,
+                    public_id:public_id,
+                    
                     
                 });
     

@@ -19,6 +19,10 @@ const messageSchema = new mongoose.Schema({
         type:String,
         default:"text"
     },
+    public_id: {
+    type: String,
+    default: null
+  },
     isRead: { 
         type: Boolean, 
         default: false 

@@ -1000,7 +1000,8 @@ a {
 
 .chatarea-header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
+    
     align-items: center;
     border-bottom: 1px solid var(--border-color);
     background-color: var(--bg-secondary);
@@ -1011,7 +1012,9 @@ a {
     box-sizing: border-box;
     flex-shrink: 0;
 }
-
+.backbtn-profile{
+    display: flex;
+}
 .backbtn {
     display: flex;
     justify-content: center;
@@ -1027,7 +1030,19 @@ a {
 .backbtn:hover {
     background-color: var(--bg-tertiary);
 }
+.chat-delete-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
 
+.selection-bar {
+  padding: 10px;
+  background: #222;
+  color: white;
+  font-weight: bold;
+}
 .chatarea-messages {
     display: flex;
     flex-direction: column;
@@ -1043,30 +1058,37 @@ a {
 }
 
 .message {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+ width: 100%;
+
+   
 }
 
 .message-text {
-    max-width: 100%;
-    padding: 0.8rem;
-    border-radius: 1rem;
-    font-size: 1rem;
-    background-color: var(--border-color);
-    word-wrap: break-word;
+  max-width: 40%;
+  padding: 0.8rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  background-color: var(--border-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .message.received {
-    align-self: flex-start;
+    justify-content: flex-start;
     color: var(--text-primary);
+
 }
 
 .message.sent {
-    align-self: flex-end;
+    justify-content: flex-end;
     color: var(--text-primary);
 }
-
+.message.chat-selected{
+    background-color: var(--bg-secondary)!important;
+    border-radius: 1rem;
+}
 .received-image img {
     border-radius: 10px;
     width: 10rem;
