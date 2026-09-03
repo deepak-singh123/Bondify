@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter,Navigate } from 'react-router-dom'
 
 import App from './App.jsx'
 import Signin from './components/Sign-in/Signin.jsx'
@@ -18,7 +18,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <Signin /> },
+      {
+        index: true,
+        element: <Navigate to="/login" replace />
+      },
       { 
         path: "/home", 
         element: <ProtectedRoute><Home /></ProtectedRoute>

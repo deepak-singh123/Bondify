@@ -12,11 +12,11 @@ const Signin = () => {
   const currentPath = useSelector((store) => store.path.currentPath);
   const curruser = useSelector((store) => store.user.user);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "guest@gmail.com",
+    password: "guest",
     username: currentPath === "/register" ? "" : "",
   });
-
+console.log("Formdata =",formData);
   const [errors, setErrors] = useState({});
   const [backendError, setBackendError] = useState("");
 
@@ -78,25 +78,29 @@ const Signin = () => {
   };
 
   const toggleForm = () => {
+    console.log("toggle form clicked");
     const newPath = currentPath === "/login" ? "/register" : "/login";
     navigate(newPath);
     dispatch(setPath(newPath));
+   
     setErrors({});
   };
-
+ 
   useEffect(() => {
     setFormData({
-      email: "",
-      password: "",
+      ...formData,
       username: currentPath === "/register" ? "" : "",  // Ensure username is always a string
     });
     setErrors({});
     setBackendError("");
+   
   }, [currentPath]);
 
   return (
     <div className="signin-page">
       <div className={`container ${currentPath === "/register" ? "active" : ""}`}>
+
+      
         <div className={`form-container sign-up ${currentPath === "/register" ? "active" : ""}`}>
           <form onSubmit={onSubmit}>
             <h1>Create Account</h1>
