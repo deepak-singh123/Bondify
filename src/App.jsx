@@ -37,6 +37,9 @@ function App() {
     if (isLoggedIn) {
       navigate("/home"); // Redirect if logged in
     }
+    else{
+      navigate("/login");
+    }
   }, [isLoggedIn, navigate]);
   useEffect(() => {
     if (curruser && curruser._id) {
