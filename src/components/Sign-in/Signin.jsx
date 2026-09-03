@@ -16,7 +16,6 @@ const Signin = () => {
     password: "guest",
     username: currentPath === "/register" ? "" : "",
   });
-console.log("Formdata =",formData);
   const [errors, setErrors] = useState({});
   const [backendError, setBackendError] = useState("");
 
@@ -78,7 +77,6 @@ console.log("Formdata =",formData);
   };
 
   const toggleForm = () => {
-    console.log("toggle form clicked");
     const newPath = currentPath === "/login" ? "/register" : "/login";
     navigate(newPath);
     dispatch(setPath(newPath));
