@@ -137,7 +137,8 @@ catch(err){
 
 
 export const markasread =  async (req, res) => {
-    const { senderId, receiverId } = req.body;
+    const receiverId = req.user._id;
+    const { senderId } = req.body;
 
     try {
         await Message.updateMany(

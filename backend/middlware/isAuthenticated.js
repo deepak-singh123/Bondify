@@ -28,6 +28,13 @@ export const isauthenticated = async (req, res, next) => {
         }
 
         const decoded = await jwt.verify(authToken, process.env.SECRET_KEY);
+        const currentUser = await user.findById(decoded._id);
+
+        if (!currentUser) {
+            return res.status(401).json({
+                message: "Authentication failed. User no longer exists."
+            });
+            }
 
          req.user = await user.findById(decoded._id);
 

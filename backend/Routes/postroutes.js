@@ -7,10 +7,10 @@ import { likepost } from "../controllers/postlike.js";
 import { getcomments, postcomment } from "../controllers/postcomment.js";
 
 const postroutes = express.Router();
-postroutes.post("/create", upload.single('postimage'), isauthenticated, uploadpost);
+postroutes.post("/create", isauthenticated,upload.single('postimage'),  uploadpost);
 postroutes.post("/delete/:id", isauthenticated, deletepost);
 postroutes.get("/allposts", isauthenticated, allposts);
 postroutes.post("/likepost/:id", isauthenticated, likepost);
-postroutes.post("/comment/:id", upload.none(), isauthenticated, postcomment);
+postroutes.post("/comment/:id",  isauthenticated,upload.none(), postcomment);
 postroutes.get("/getcomments/:id", isauthenticated, getcomments);
 export default postroutes;

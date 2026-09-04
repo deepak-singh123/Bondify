@@ -12,5 +12,5 @@ authroutes.post("/register", registeruser);
 authroutes.post("/login", userlogin);
 authroutes.post("/logout", isauthenticated, authlogout);
 authroutes.post("/isloggedin", isauthenticated, isLoggedin);
-authroutes.post("/api/user/profile", upload.single('profilePhoto'), isauthenticated, uploadprofile);
+authroutes.post("/api/user/profile", isauthenticated,upload.single('profilePhoto'),  uploadprofile);
 export default authroutes;
