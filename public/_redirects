@@ -3,7 +3,7 @@
 /auth/* https://bondify-1lzw.onrender.com/auth/:splat 200
 /user/* https://bondify-1lzw.onrender.com/user/:splat 200
 /messages/* https://bondify-1lzw.onrender.com/messages/:splat 200
-/health/* https://bondify-1lzw.onrender.com/health/:splat 200
+/health https://bondify-1lzw.onrender.com/health 200
 
 # Ensure React handles frontend routes
 /* /index.html 200
