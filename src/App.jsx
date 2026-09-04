@@ -26,6 +26,7 @@ function App() {
   const curruser = useSelector((store) => store.user.user);
   const isLoggedIn = useSelector((store) => store.user.isLoggedIn);
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
   // Handle user data fetching on app load
   useEffect(() => {
     dispatch(fetchUserData())
@@ -37,9 +38,7 @@ function App() {
     if (isLoggedIn) {
       navigate("/home"); // Redirect if logged in
     }
-    /*else{
-      navigate("/login");
-    }*/
+    
   }, [isLoggedIn, navigate]);
   useEffect(() => {
     if (curruser && curruser._id) {

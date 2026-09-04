@@ -14,6 +14,7 @@ import { createServer } from "http"; // Use HTTP for the server
 import { Server } from "socket.io"; // Import Socket.IO
 import messageroutes from "./Routes/messageroutes.js";
 import { Message } from "./models/message.js";
+import wakeuproute from "./Routes/wakeuproute.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use('/public', express.static('public'));
 
 /* Routes */
+app.use('/health',wakeuproute)
 app.use('/auth', authroutes);
 app.use('/user', userroutes); 
 app.use('/user/post', postroutes); 

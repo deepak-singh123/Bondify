@@ -16,8 +16,20 @@ const Signin = () => {
     password: "guest",
     username: currentPath === "/register" ? "" : "",
   });
+
+  
   const [errors, setErrors] = useState({});
   const [backendError, setBackendError] = useState("");
+
+  useEffect(() => {
+  const wakeBackend = async () => {
+    console.log("inside frontend health trigger");
+
+    await fetch('/health').catch(() => {});
+  };
+
+  wakeBackend();
+}, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
