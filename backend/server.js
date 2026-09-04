@@ -15,6 +15,9 @@ import { Server } from "socket.io"; // Import Socket.IO
 import messageroutes from "./Routes/messageroutes.js";
 import { Message } from "./models/message.js";
 import wakeuproute from "./Routes/wakeuproute.js";
+import jwt from "jsonwebtoken";
+import * as cookie from "cookie";
+import { user } from "./models/user.js";
 
 dotenv.config();
 
@@ -63,6 +66,43 @@ const io = new Server(httpServer, {
     },
 });
 
+
+//authenticate the current user and add them to the backend socket
+io.use(async(socket,next)=>{
+    try{
+        const rawCookies = socket.handshake.headers.cookie || "";
+        const {authToken} = cookie.parseCookie(rawCookies);
+
+        if(!authToken){
+            return next(new Error("Unauthorized"));
+        }
+
+        const decoded = jwt.verify(authToken,process.env.SECRET_KEY);
+
+        const currentUser = await user.findById(decoded._id).select("_id");
+
+        if (!currentUser) {
+        return next(new Error("Unauthorized"));
+        }
+
+
+        // Identity verified by the server from the JWT.
+        socket.data.userId = currentUser._id.toString();
+        return next()  //passed for connection
+
+    }
+    catch (error) {
+    console.error("Socket authentication failed:", error.message);
+    return next(new Error("Unauthorized")); //rejected  for connection
+  }
+   
+})
+
+
+
+
+
+
 // Online users tracker
 const onlineUsers = new Map();
 
@@ -70,9 +110,9 @@ io.on("connection", (socket) => {
     console.log(`A user connected with id ${socket.id}`);
  
     // User is online
-    socket.on("user_online", (userId) => {
-        onlineUsers.set(userId, socket.id); // Map userId to socketId
-        console.log(`User ${userId} is online.`);
+    socket.on("user_online", () => {
+        onlineUsers.set(socket.data.userId, socket.id); // Map userId to socketId
+        console.log(`User ${socket.data.userId} is online.`);
         io.emit("online_users", [...onlineUsers.keys()]);
 
     });
@@ -91,7 +131,9 @@ io.on("connection", (socket) => {
 
     socket.on("send_image",async(data)=>{
         try {
-            const { id,senderId, receiverId, content, createdAt ,by,public_id} = data;
+            const senderId = socket.data.userId;
+
+            const { id, receiverId, content, createdAt ,by,public_id} = data;
             console.log("Uploading image...");
             
             // Upload to Cloudinary
@@ -140,7 +182,8 @@ io.on("connection", (socket) => {
 
     socket.on("send_message", async (data) => {
         console.log(data);
-        const { senderId, receiverId, content, type, createdAt, by } = data;
+        const senderId = socket.data.userId;
+        const {  receiverId, content, type, createdAt, by } = data;
 
         const receiverSocketId = onlineUsers.get(receiverId);
         console.log("reciever id= ", receiverSocketId);
@@ -176,19 +219,29 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("message_seen", data=>{
-        const { senderId, receiverId } = data;
-        const receiverSocketId = onlineUsers.get(receiverId); // Check if the receiver is online
-        console.log("inside the server message seen");
-        if (receiverSocketId) {
-            console.log("RECIEVER ONLINE");
-            io.to(receiverSocketId).emit("message_response", {
-                sender:senderId,
-                receiver:receiverId,
-                seen:true
+  socket.on("message_seen", async ({ senderId }) => {
+        const receiverId = socket.data.userId;
+
+        const messageExists = await Message.exists({
+            sender: senderId,
+            receiver: receiverId
+        });
+
+        if (!messageExists) {
+            return;
+        }
+
+        const senderSocketId = onlineUsers.get(senderId);
+
+        if (senderSocketId) {
+            io.to(senderSocketId).emit("message_response", {
+            sender: senderId,
+            receiver: receiverId,
+            seen: true
             });
         }
-    })
+    }
+);
 
 
     // User disconnects

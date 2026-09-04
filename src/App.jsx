@@ -40,6 +40,7 @@ function App() {
     }
     
   }, [isLoggedIn, navigate]);
+  
   useEffect(() => {
     if (curruser && curruser._id) {
         socket = io(SOCKET_SERVER_URL, { withCredentials: true });

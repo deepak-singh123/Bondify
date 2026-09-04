@@ -28,6 +28,7 @@ export const isauthenticated = async (req, res, next) => {
         }
 
         const decoded = await jwt.verify(authToken, process.env.SECRET_KEY);
+        
         const currentUser = await user.findById(decoded._id);
 
         if (!currentUser) {
@@ -36,7 +37,7 @@ export const isauthenticated = async (req, res, next) => {
             });
             }
 
-         req.user = await user.findById(decoded._id);
+         req.user = currentUser;
 
         next();
     } catch (error) {
