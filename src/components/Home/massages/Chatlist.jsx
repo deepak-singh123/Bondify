@@ -127,7 +127,7 @@ const justHeld = useRef(false);
   }, [onlineusers, followers, following]);
 
   useEffect(() => {
-    socket.emit("user_online");
+    socket.emit("user_online", curruser._id);    
     socket.on("online_users", (users) => {
       setonlineusers(users);
     });
