@@ -79,10 +79,11 @@ io.use(async(socket,next)=>{
 
         const decoded = jwt.verify(authToken,process.env.SECRET_KEY);
 
-        const currentUser = await user.findById(decoded._id).select("_id");
+        const currentUser = await user.findById(decoded._id);
+        console.log("curruser=",currentUser);
 
         if (!currentUser) {
-        return next(new Error("Unauthorized"));
+        return next(new Error("Error in Server.js user is Unauthorized"));
         }
 
 
@@ -222,14 +223,14 @@ io.on("connection", (socket) => {
   socket.on("message_seen", async ({ senderId }) => {
         const receiverId = socket.data.userId;
 
-        const messageExists = await Message.exists({
+       /* const messageExists = await Message.exists({
             sender: senderId,
             receiver: receiverId
         });
 
         if (!messageExists) {
             return;
-        }
+        }*/
 
         const senderSocketId = onlineUsers.get(senderId);
 
